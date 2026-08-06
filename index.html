@@ -1,0 +1,710 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Papan Status — Outstanding Works Talavera Project</title>
+<style>
+  :root {
+    --paper: #eceee5;
+    --paper-2: #e3e5da;
+    --panel: #f7f8f2;
+    --panel-2: #ffffff;
+    --ink: #1a221c;
+    --ink-soft: #565f56;
+    --ink-faint: #838c80;
+    --border: rgba(26, 34, 28, 0.13);
+    --border-strong: rgba(26, 34, 28, 0.24);
+    --accent: #2b6083;
+    --accent-ink: #ffffff;
+    --accent-soft: rgba(43, 96, 131, 0.10);
+    --open: #9a5b0a;
+    --open-soft: rgba(154, 91, 10, 0.13);
+    --closed: #2f7a4f;
+    --closed-soft: rgba(47, 122, 79, 0.13);
+    --danger: #a63a2c;
+    --danger-soft: rgba(166, 58, 44, 0.10);
+    --good: #2f7a4f;
+    --shadow: 0 1px 2px rgba(20, 24, 20, 0.05), 0 10px 28px -16px rgba(20, 24, 20, 0.28);
+    --radius: 10px;
+    --radius-sm: 7px;
+    --mono: ui-monospace, "SFMono-Regular", Menlo, Consolas, "Liberation Mono", monospace;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #10151a; --paper-2: #161d23; --panel: #1a2129; --panel-2: #1f2830;
+      --ink: #e6ebe7; --ink-soft: #a3aeaa; --ink-faint: #707c78;
+      --border: rgba(230, 235, 231, 0.11); --border-strong: rgba(230, 235, 231, 0.22);
+      --accent: #74a9d4; --accent-ink: #0c1720; --accent-soft: rgba(116, 169, 212, 0.14);
+      --open: #e3a748; --open-soft: rgba(227, 167, 72, 0.15);
+      --closed: #6cbd85; --closed-soft: rgba(108, 189, 133, 0.14);
+      --danger: #e08475; --danger-soft: rgba(224, 132, 117, 0.14); --good: #6cbd85;
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 10px 28px -16px rgba(0, 0, 0, 0.6);
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #10151a; --paper-2: #161d23; --panel: #1a2129; --panel-2: #1f2830;
+    --ink: #e6ebe7; --ink-soft: #a3aeaa; --ink-faint: #707c78;
+    --border: rgba(230, 235, 231, 0.11); --border-strong: rgba(230, 235, 231, 0.22);
+    --accent: #74a9d4; --accent-ink: #0c1720; --accent-soft: rgba(116, 169, 212, 0.14);
+    --open: #e3a748; --open-soft: rgba(227, 167, 72, 0.15);
+    --closed: #6cbd85; --closed-soft: rgba(108, 189, 133, 0.14);
+    --danger: #e08475; --danger-soft: rgba(224, 132, 117, 0.14); --good: #6cbd85;
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 10px 28px -16px rgba(0, 0, 0, 0.6);
+  }
+  :root[data-theme="light"] {
+    --paper: #eceee5; --paper-2: #e3e5da; --panel: #f7f8f2; --panel-2: #ffffff;
+    --ink: #1a221c; --ink-soft: #565f56; --ink-faint: #838c80;
+    --border: rgba(26, 34, 28, 0.13); --border-strong: rgba(26, 34, 28, 0.24);
+    --accent: #2b6083; --accent-ink: #ffffff; --accent-soft: rgba(43, 96, 131, 0.10);
+    --open: #9a5b0a; --open-soft: rgba(154, 91, 10, 0.13);
+    --closed: #2f7a4f; --closed-soft: rgba(47, 122, 79, 0.13);
+    --danger: #a63a2c; --danger-soft: rgba(166, 58, 44, 0.10); --good: #2f7a4f;
+    --shadow: 0 1px 2px rgba(20, 24, 20, 0.05), 0 10px 28px -16px rgba(20, 24, 20, 0.28);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body { background: var(--paper); color: var(--ink); font-family: var(--sans); font-size: 14px; line-height: 1.5; -webkit-font-smoothing: antialiased; }
+  ::selection { background: var(--accent-soft); }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 0 20px; }
+  button { font-family: inherit; }
+  input, select, textarea { font-family: inherit; font-size: inherit; color: inherit; }
+
+  .topbar { position: sticky; top: 0; z-index: 30; background: color-mix(in srgb, var(--paper) 92%, transparent); backdrop-filter: blur(10px); border-bottom: 1px solid var(--border); }
+  .topbar-inner { padding: 18px 0 14px; }
+  .eyebrow { font: 700 11px/1 var(--mono); letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent); display: flex; align-items: center; gap: 8px; justify-content: space-between; flex-wrap: wrap; }
+  .eyebrow .left { display: flex; align-items: center; gap: 8px; }
+  .eyebrow .dot { width: 6px; height: 6px; border-radius: 50%; background: var(--accent); }
+  h1 { font-size: 22px; margin: 6px 0 2px; font-weight: 800; letter-spacing: -0.01em; text-wrap: balance; }
+  .subtitle { color: var(--ink-soft); font-size: 13px; margin: 0 0 14px; }
+  .subtitle b { color: var(--ink); font-weight: 600; }
+
+  .sync-status { display: inline-flex; align-items: center; gap: 6px; font: 600 10.5px var(--mono); text-transform: uppercase; letter-spacing: 0.04em; }
+  .sync-status .led { width: 7px; height: 7px; border-radius: 50%; background: var(--ink-faint); }
+  .sync-status.ok .led { background: var(--good); box-shadow: 0 0 0 3px color-mix(in srgb, var(--good) 22%, transparent); }
+  .sync-status.err .led { background: var(--danger); box-shadow: 0 0 0 3px color-mix(in srgb, var(--danger) 22%, transparent); }
+  .sync-status.pending .led { background: var(--accent); box-shadow: 0 0 0 3px color-mix(in srgb, var(--accent) 22%, transparent); }
+
+  .name-box { display: flex; align-items: center; gap: 6px; }
+  .name-box input { padding: 5px 9px; border-radius: 99px; border: 1px solid var(--border-strong); background: var(--panel-2); color: var(--ink); font-size: 11.5px; width: 130px; }
+  .name-box input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .name-box label { font: 600 10px var(--sans); text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-faint); }
+
+  .stat-row { display: flex; flex-wrap: wrap; gap: 10px; align-items: stretch; }
+  .stat-pill { background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 8px 14px; display: flex; flex-direction: column; gap: 2px; min-width: 84px; }
+  .stat-pill .n { font: 700 20px/1 var(--mono); font-variant-numeric: tabular-nums; }
+  .stat-pill .l { font-size: 10.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-faint); }
+  .stat-pill.open .n { color: var(--open); }
+  .stat-pill.closed .n { color: var(--closed); }
+  .progress-wide { flex: 1; min-width: 220px; background: var(--panel); border: 1px solid var(--border); border-radius: var(--radius); padding: 8px 14px; display: flex; flex-direction: column; justify-content: center; gap: 6px; }
+  .progress-wide .top-line { display: flex; justify-content: space-between; font-size: 11px; color: var(--ink-soft); }
+  .progress-wide .top-line b { font: 700 15px/1 var(--mono); color: var(--ink); }
+  .bar-track { height: 7px; border-radius: 99px; background: var(--open-soft); overflow: hidden; }
+  .bar-fill { height: 100%; background: var(--closed); border-radius: inherit; transition: width 0.35s ease; }
+
+  .banner { max-width: 1080px; margin: 10px auto 0; padding: 10px 20px; }
+  .banner-inner { background: var(--danger-soft); border: 1px solid color-mix(in srgb, var(--danger) 45%, transparent); color: var(--danger); border-radius: var(--radius-sm); padding: 10px 14px; font-size: 12.5px; display: none; line-height: 1.55; }
+  .banner-inner.show { display: block; }
+  .banner-inner code { font: 600 11.5px var(--mono); background: color-mix(in srgb, var(--danger) 12%, transparent); padding: 1px 5px; border-radius: 4px; }
+
+  .toolbar { position: sticky; top: 0; z-index: 29; background: var(--paper-2); border-bottom: 1px solid var(--border); }
+  .toolbar-inner { padding: 10px 0; display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .search-box { position: relative; flex: 1 1 200px; min-width: 160px; }
+  .search-box input { width: 100%; padding: 7px 10px 7px 30px; border-radius: var(--radius-sm); border: 1px solid var(--border-strong); background: var(--panel-2); color: var(--ink); }
+  .search-box input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .search-box svg { position: absolute; left: 9px; top: 50%; transform: translateY(-50%); opacity: 0.55; pointer-events: none; }
+  select.filter-select { padding: 7px 9px; border-radius: var(--radius-sm); border: 1px solid var(--border-strong); background: var(--panel-2); color: var(--ink); }
+  select.filter-select:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .seg { display: inline-flex; border: 1px solid var(--border-strong); border-radius: var(--radius-sm); overflow: hidden; }
+  .seg button { border: none; background: var(--panel-2); color: var(--ink-soft); padding: 7px 12px; cursor: pointer; font-size: 12.5px; font-weight: 600; border-right: 1px solid var(--border-strong); }
+  .seg button:last-child { border-right: none; }
+  .seg button.active { background: var(--accent); color: var(--accent-ink); }
+  .seg button:focus-visible { outline: 2px solid var(--accent); outline-offset: -2px; }
+  .btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 12px; border-radius: var(--radius-sm); border: 1px solid var(--border-strong); background: var(--panel-2); color: var(--ink); cursor: pointer; font-size: 12.5px; font-weight: 600; white-space: nowrap; }
+  .btn:hover { border-color: var(--accent); color: var(--accent); }
+  .btn:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .btn.primary { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+  .btn.primary:hover { filter: brightness(1.08); color: var(--accent-ink); }
+  .menu-wrap { position: relative; }
+  .menu { position: absolute; right: 0; top: calc(100% + 6px); background: var(--panel-2); border: 1px solid var(--border-strong); border-radius: var(--radius-sm); box-shadow: var(--shadow); min-width: 220px; padding: 5px; display: none; z-index: 40; }
+  .menu.show { display: block; }
+  .menu button { display: block; width: 100%; text-align: left; padding: 8px 9px; border: none; background: none; color: var(--ink); cursor: pointer; border-radius: 6px; font-size: 12.5px; }
+  .menu button:hover { background: var(--accent-soft); color: var(--accent); }
+  .area-chip-row { display: flex; flex-wrap: wrap; gap: 6px; padding: 8px 0 2px; }
+  .chip { padding: 5px 11px; border-radius: 99px; border: 1px solid var(--border-strong); background: var(--panel-2); color: var(--ink-soft); font-size: 12px; font-weight: 600; cursor: pointer; }
+  .chip:hover { border-color: var(--accent); }
+  .chip.active { background: var(--accent-soft); border-color: var(--accent); color: var(--accent); }
+  .chip:focus-visible { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .chip .c { font: 600 10.5px var(--mono); opacity: 0.75; margin-left: 3px; }
+
+  main { padding: 18px 0 60px; }
+  .empty-state { text-align: center; padding: 50px 20px; color: var(--ink-faint); font-size: 13px; }
+  .area-section { border: 1px solid var(--border); border-radius: var(--radius); background: var(--panel); margin-bottom: 12px; overflow: hidden; }
+  .area-head { display: flex; align-items: center; gap: 12px; padding: 12px 14px; cursor: pointer; list-style: none; user-select: none; }
+  .area-head::-webkit-details-marker { display: none; }
+  .area-head .chev { transition: transform 0.15s ease; color: var(--ink-faint); flex: none; }
+  details[open] > .area-head .chev { transform: rotate(90deg); }
+  .area-head h2 { font-size: 14.5px; margin: 0; font-weight: 800; flex: none; }
+  .area-head .sub { color: var(--ink-faint); font-size: 11.5px; font: 600 11.5px var(--mono); flex: none; }
+  .area-head .spacer { flex: 1; }
+  .area-bar { width: 120px; }
+  .area-bar .bar-track { height: 5px; }
+  .area-head .count-badge { font: 700 11px var(--mono); color: var(--ink-soft); background: var(--panel-2); border: 1px solid var(--border); padding: 2px 7px; border-radius: 99px; flex: none; }
+  .item-list { border-top: 1px solid var(--border); }
+  details.item { border-top: 1px solid var(--border); }
+  details.item:first-child { border-top: none; }
+  .item-head { display: grid; grid-template-columns: 30px 1fr auto auto; gap: 10px; align-items: center; padding: 10px 14px; cursor: pointer; list-style: none; }
+  .item-head::-webkit-details-marker { display: none; }
+  .item-head:hover { background: var(--accent-soft); }
+  .item-no { font: 700 11.5px var(--mono); color: var(--ink-faint); text-align: right; }
+  .item-title-wrap { min-width: 0; }
+  .item-title { font-weight: 600; font-size: 13.3px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .item-meta { font-size: 11px; color: var(--ink-faint); margin-top: 1px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .item-meta .disiplin { font-weight: 600; color: var(--ink-soft); }
+  .item-target { font: 600 11px var(--mono); color: var(--ink-faint); white-space: nowrap; text-align: right; }
+  .item-target .lbl { display: block; font: 600 9.5px var(--sans); letter-spacing: 0.05em; text-transform: uppercase; opacity: 0.8; }
+  .status-pill { border: 1px solid transparent; border-radius: 99px; padding: 5px 12px; font: 700 11px var(--mono); letter-spacing: 0.03em; text-transform: uppercase; cursor: pointer; white-space: nowrap; }
+  .status-pill.open { background: var(--open-soft); color: var(--open); border-color: color-mix(in srgb, var(--open) 40%, transparent); }
+  .status-pill.closed { background: var(--closed-soft); color: var(--closed); border-color: color-mix(in srgb, var(--closed) 40%, transparent); }
+  .status-pill:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  .status-pill:hover { filter: brightness(0.96); }
+  .status-pill:disabled { opacity: 0.55; cursor: wait; }
+  details.item.edited .item-title::after { content: "•"; color: var(--accent); margin-left: 6px; font-weight: 900; }
+  .item-body { padding: 4px 14px 16px 54px; display: flex; flex-direction: column; gap: 12px; }
+  .field { display: flex; flex-direction: column; gap: 3px; }
+  .field .k { font: 700 10px var(--sans); letter-spacing: 0.07em; text-transform: uppercase; color: var(--ink-faint); }
+  .field .v { font-size: 13px; color: var(--ink); white-space: pre-line; }
+  .tag-row { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+  .tag { font: 600 10.5px var(--mono); padding: 3px 8px; border-radius: 6px; background: var(--panel-2); border: 1px solid var(--border); color: var(--ink-soft); }
+  .status-toggle-row { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  .status-toggle-row .seg button.open.active { background: var(--open); color: #17130a; }
+  .status-toggle-row .seg button.closed.active { background: var(--closed); color: #0c1f13; }
+  .update-box textarea { width: 100%; min-height: 56px; resize: vertical; padding: 8px 10px; border-radius: var(--radius-sm); border: 1px solid var(--border-strong); background: var(--panel-2); color: var(--ink); }
+  .update-box textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .update-foot { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-top: 4px; flex-wrap: wrap; }
+  .saved-flag { font-size: 11px; display: flex; align-items: center; gap: 4px; }
+  .saved-flag.ok { color: var(--good); }
+  .saved-flag.pending { color: var(--ink-faint); }
+  .saved-flag.err { color: var(--danger); }
+  .edited-at { font-size: 11px; color: var(--ink-faint); }
+  .reset-item-btn { background: none; border: none; color: var(--ink-faint); font-size: 11px; cursor: pointer; text-decoration: underline; padding: 0; }
+  .reset-item-btn:hover { color: var(--danger); }
+  footer.note { max-width: 1080px; margin: 8px auto 40px; padding: 14px 20px; color: var(--ink-faint); font-size: 11.5px; border-top: 1px solid var(--border); line-height: 1.6; }
+  footer.note b { color: var(--ink-soft); }
+  .toast { position: fixed; left: 50%; bottom: 22px; transform: translate(-50%, 12px); z-index: 90; background: var(--ink); color: var(--paper); padding: 10px 16px; border-radius: 99px; font-size: 12.5px; font-weight: 600; box-shadow: var(--shadow); opacity: 0; pointer-events: none; transition: all 0.2s ease; max-width: 90vw; text-align: center; }
+  .toast.show { opacity: 1; transform: translate(-50%, 0); }
+  @media (max-width: 620px) {
+    .item-head { grid-template-columns: 24px 1fr auto; }
+    .item-target { display: none; }
+    .item-body { padding-left: 14px; }
+    .area-bar { display: none; }
+    .name-box input { width: 96px; }
+  }
+  @media (prefers-reduced-motion: reduce) { * { transition: none !important; animation: none !important; } }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="wrap topbar-inner">
+    <div class="eyebrow">
+      <span class="left"><span class="dot"></span>Papan Status &middot; Outstanding Works</span>
+      <span class="left">
+        <span class="sync-status" id="sync-status"><span class="led"></span><span id="sync-status-text">Menyambungkan…</span></span>
+        <span class="name-box"><label for="actor-input">Nama</label><input type="text" id="actor-input" placeholder="nama Anda" maxlength="40"></span>
+      </span>
+    </div>
+    <h1>Blending Silo &middot; Clinker Silo &middot; Semen Silo &middot; Tube Conveyor &middot; Shiploader — Talavera Project</h1>
+    <p class="subtitle">Data dasar per <b>27 Juli 2026</b> dari <i>Outstanding_Works_Talavera_Project_27_Juli_2026.xlsx</i>. Status &amp; update tersinkron untuk semua orang yang membuka tautan ini.</p>
+    <div class="stat-row">
+      <div class="stat-pill"><span class="n" id="stat-total">0</span><span class="l">Total item</span></div>
+      <div class="stat-pill open"><span class="n" id="stat-open">0</span><span class="l">Open</span></div>
+      <div class="stat-pill closed"><span class="n" id="stat-closed">0</span><span class="l">Close</span></div>
+      <div class="progress-wide">
+        <div class="top-line"><span>Progres penyelesaian</span><b id="stat-pct">0%</b></div>
+        <div class="bar-track"><div class="bar-fill" id="stat-bar" style="width:0%"></div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="banner">
+  <div class="banner-inner" id="setup-banner"></div>
+</div>
+
+<div class="toolbar">
+  <div class="wrap toolbar-inner">
+    <div class="search-box">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+      <input type="text" id="search-input" placeholder="Cari defect, keterangan, area, kode equipment…" autocomplete="off">
+    </div>
+    <select class="filter-select" id="disiplin-select"><option value="all">Semua disiplin</option></select>
+    <div class="seg" id="status-seg">
+      <button data-status="all" class="active">Semua</button>
+      <button data-status="Open">Open</button>
+      <button data-status="Close">Close</button>
+    </div>
+    <div class="menu-wrap">
+      <button class="btn primary" id="export-toggle">Menu ▾</button>
+      <div class="menu" id="export-menu">
+        <button id="refresh-now">↻ Sinkron ulang sekarang</button>
+        <button id="export-txt">⬇ Ekspor ringkasan (.txt)</button>
+        <button id="reset-all-btn" style="color:var(--danger)">↺ Reset semua ke data asli</button>
+      </div>
+    </div>
+  </div>
+  <div class="wrap"><div class="area-chip-row" id="area-chip-row"></div></div>
+</div>
+
+<main class="wrap">
+  <div id="board"></div>
+  <div class="empty-state" id="empty-state" style="display:none">Tidak ada item yang cocok dengan filter saat ini.</div>
+</main>
+
+<footer class="note wrap">
+  Status <b>Open/Close</b> dan <b>Update Status</b> di sini tersinkron untuk semua orang lewat repositori GitHub proyek ini — siapa pun yang membuka tautan ini melihat data yang sama, dan papan menyegarkan diri otomatis setiap ±15 detik. Bidang lain (Permasalahan, Keterangan, Feed Back HK, Target) berasal dari file Excel sumber dan bersifat baca-saja di papan ini.
+</footer>
+
+<div class="toast" id="toast"></div>
+
+<script type="application/json" id="seed-data">[{"id":"item-1","no":1,"area":"Blending Silo","disiplin":"Sipil","defect":"Pintu utama terpasang belum sempurna & Kanopi belum semua terpasang.","masalah":"a,  Pintu terpasang tidak sesuai dengan IFC drawing (TPJC-TQ1-DW-C3-391-3S03-003 R0 )  dan Canopy utama BS  belum Terpasang refer ke Drawing Layout IFC  Drawing, (TPJC-TQ1-DW-C3-391-3S03-002 refer  standard drawing )","status":"Open","keterangan":"a. HK sudah melakukan pemasangan Pintu, namun tidak sesuai dengan Drawing IFC (Plat terpasang baru satu sisi)\nb. Canopy baru terpasang di area 431-AS05","feedback":"Pintu sudah terpasang dan berfungsi dengan baik \n(pengajuan HK status Closed)","target":"Tidak Dikerjakan","do":"D","statusupdate":"Tidak Dikerjakan"},{"id":"item-2","no":2,"area":"Blending Silo","disiplin":"Mechanical","defect":"Diverter gate 391-GT01","masalah":"1. Kebocoran pada GT01 \n2. Reliability diverter gate yang selama ini kurang baik. Ada potensi Flapper GT01 tidak bisa menutup rapat, karena ada material yang menghambat distoper ( kontraktor akan mengganti unit diverter gate )","status":"Open","keterangan":"Kontraktor sudah berkoordinasi dg FLS dan 391-GT01 akan diganti (dalam proses fabrikasi) \nInfo Kontraktor MOS 30 April 2026","feedback":"MOS 30 April 2026, pemasangan (sekitar 3 hari kerja) disesuaikan dengan jadwal Kiln off","target":"AGUSTUS 2026","do":"D","statusupdate":"Sedang Pengurusan PIB"},{"id":"item-3","no":3,"area":"Blending Silo","disiplin":"Mechanical","defect":"Vibrasi Motor Fan 391- FN05 masih tinggi diatas 4,5mm/s (Axis DE 6,6mm/s & NDE 7,2mm/s)","masalah":"Vibrasi bearing tingg di radial & Axial :    8 mm/s,& 9 mm/s \nTemperature masih tinggi >100","status":"Open","keterangan":"Sudah dilakukan perbaikan namun hasilnya masih melebihi batas maksimal (Sesuai ISO 10816-1 vibrasi < 4,5mm/s).","feedback":"Sesuai dengan ISO 14694 khusus untuk Fan maksimum 6,3mm/s. Equipment tersebut akan dimonitor terus selama DNP","target":"DNP","do":"D","statusupdate":"Cek ulang 6 Juli : Vibrasi Fan NDE A:14.5 , H:15.8 , V:9.1,  DE A:11.9 , H:12.5 , V:7.2"},{"id":"item-4","no":4,"area":"Blending Silo","disiplin":"Elins","defect":"Cable tagging di panel existing Lampu belum terpasang","masalah":"Cable Tagging belum dipasang ( terpasang sebagian )","status":"Close","keterangan":"Pemasangan cable tangging untuk panel existing lampu di lantai 4 pre-heater belum diselesaikan.","feedback":"Material sudah siap","target":"Sudah dilakukan JI 24 April 2026","do":"D","statusupdate":""},{"id":"item-5","no":5,"area":"Blending Silo","disiplin":"Mechanical","defect":"Vibrasi Fan 431- FN03 masih tinggi (Axis DE 12,6mm/s & NDE 18,2mm/s)","masalah":"Saat re-PGT kembali terbaca Vibrasi Motor diatas batas normal, sampai 26,9 mm/s","status":"Open","keterangan":"Sudah dilakukan perbaikan namun hasilnya masih melebihi batas maksimal (Sesuai ISO 10816-1 vibrasi    < 4,5mm/s).","feedback":"Sudah dilakukan pemindahan fan ke platform elevasi +39, namun vibrasi yang terjadi masih sama. Fan akan dilakukan re-balancing dan alignment impeller.","target":"DNP","do":"D","statusupdate":"TDK DIKERJAKAN , Cek ulang 14 Juli: Vibrasi Mtr NDE A: 9.2, H: 9.8, V: 13.6, DE A: 10, H: 4.3 , V: 2.8"},{"id":"item-6","no":6,"area":"Blending Silo","disiplin":"Mechanical","defect":"Kebocoran udara pneumatic gate 411-PG12","masalah":"","status":"Close","keterangan":"Ada kebocoran udara dari pneumatic gate pada saat posisi PG closed.\nKontraktor telah melakukan perbaikan.","feedback":"Actuator 411-PG12 sudah dilakukan perbaikan seal dan telah ditest tidak bocor.\n(Pengajuan HK status closed)","target":"Sudah dilakukan JI 24 April 2026","do":"D","statusupdate":""},{"id":"item-7","no":7,"area":"Blending Silo","disiplin":"Elins","defect":"Kabel power motor 391-FA08","masalah":"","status":"Close","keterangan":"Kabel power motor 391-FA08 tidak dilindungi Conduit.\nKontraktor telah memasang Conduit pada kabel power.","feedback":"Kabel power sudah dipasang flexible conduit. \n(Pengajuan HK status Closed)","target":"Sudah dilakukan JI 24 April 2026","do":"D","statusupdate":""},{"id":"item-8","no":8,"area":"Blending Silo","disiplin":"Elins","defect":"Temperatur tinggi Panel Remote I/O (A-G) di area 411","masalah":"","status":"Open","keterangan":"Temperatur di dalam panel relatif tinggi karena terpengaruh temperatur ruangan yang tinggi","feedback":"HK akan memasang 2 exhaust fan dan 1 intake fan.","target":"Tidak Dikerjakan","do":"D","statusupdate":"Tidak Dikerjakan"},{"id":"item-9","no":9,"area":"Blending Silo","disiplin":"Mechanical","defect":"Compressor D31-CX09 dan D31-CX10","masalah":"","status":"Open","keterangan":"Saat ini kompresor running bersamaan, dalam data sheet desain dijelaskan kompressor 1 running dan 1 standby.","feedback":"HK akan mengirimkan justifikasi teknis terkait dengan kondisi kompresor yang 1 running dan 1 backup","target":"Tidak Dikerjakan","do":"D","statusupdate":"Tidak Dikerjakan"},{"id":"item-10","no":10,"area":"Blending Silo","disiplin":"Mechanical","defect":"Pressure gauge di filter regulator aerasi sebelah 391-AS14 sudah pecah dan terpapar cat, tidak terlihat jelas angka pressure (391-3S02)","masalah":"","status":"Close","keterangan":"Penggantian Pressure Gauge","feedback":"HK akan melakukan penggantian pressure gauge yang rusak selama masa DNP","target":"Sudah dilakukan JI 24 April 2026","do":"D","statusupdate":""},{"id":"item-11","no":11,"area":"Blending Silo","disiplin":"Mechanical","defect":"391-FA07, flange to flange blower terdapat gab 3-4mm","masalah":"","status":"Close","keterangan":"Pemasangan Gasket Packing.\nKontraktor sudah melakukan perbaikan Gasket Flange.","feedback":"HK sudah melakukan pemasangan Rubber seal dan sudah tidak bocor.\n(HK mengajukan status Closed)","target":"Sudah dilakukan JI 24 April 2026","do":"D","statusupdate":""},{"id":"item-12","no":12,"area":"Blending Silo","disiplin":"Electrical","defect":"Vibrasi Axial 391-FA07 tinggi (6,89mm/s)","masalah":"","status":"Open","keterangan":"Hasil tes vibrasi masih melebihi batas maksimal (Sesuai ISO 10816-1 vibrasi < 4,5mm/s). Disarankan membersihkan impeller Fan untuk mengurangi vibrasi motor.","feedback":"Sesuai dengan ISO 14694 khusus untuk Fan maksimum 6,3mm/s. Impeller akan dibersihkan dan dimonitor terus selama DNP.","target":"Selama DNP","do":"D","statusupdate":"CHECK ULANG 14 JULI: Vibrasi Mtr NDE  A: 4.7, H: 5.6 , V: 4.3   DE  A: 6.0 , H: 6.9 , V: 5.9"},{"id":"item-13","no":13,"area":"Blending Silo","disiplin":"Electrical","defect":"Lampu sisi timur mati di top blending (391-3S02)","masalah":"","status":"Close","keterangan":"Penggantian lampu yang mati.\nKontraktor sudah melakukan penggantian lampu.","feedback":"HK sudah melakukan penggantian lampu yang padam tanggal 2 April 2026.\n(HK mengajukan status closed)","target":"Sudah dilakukan JI 24 April 2026","do":"D","statusupdate":""},{"id":"item-14","no":14,"area":"Blending Silo","disiplin":"Electrical","defect":"Lokal isolator switch tidak berfungsi. Kondisi sekarang switch disconnector LIS diganti MCB (391-EH01)","masalah":"","status":"Close","keterangan":"Penggantian switch disconnector seperti spec awal. Agar fasilitas Lototo LIS bisa di gunakan","feedback":"Lokal isolator yang rusak akan diganti dengan VCS milik HK","target":"Sudah dilakukan JI 24 April 2026","do":"D","statusupdate":""},{"id":"item-15","no":15,"area":"Blending Silo","disiplin":"Electrical","defect":"Kabel grounding motor lepas di 431-FN03","masalah":"","status":"Close","keterangan":"Pemasangan kembali kabel grounding","feedback":"HK sudah melakukan penyambungan kembali tanggal 2 April 2026.\n(HK mengajukan status Closed)","target":"Sudah dilakukan JI 24 April 2026","do":"D","statusupdate":""},{"id":"item-16","no":16,"area":"Blending Silo","disiplin":"Electrical","defect":"Vibrasi axial 431-FN04 motor tinggi 6,79 mm/s","masalah":"","status":"Open","keterangan":"Hasil tes vibrasi masih melebihi batas maksimal (Sesuai ISO 10816-1 vibrasi < 4,5mm/s). Disarankan membersihkan impeller Fan untuk mengurangi vibrasi motor.","feedback":"Sesuai dengan ISO 14694 khusus untuk Fan maksimum 6,3mm/s. Impeller akan dibersihkan dan dimonitor terus selama DNP.","target":"Selama DNP","do":"D","statusupdate":"CHECK ULANG 14 JULI : Vibrasi Fan NDE A: 16.6 , H: 14.6 , V: 8.8  DE A: 14 , H: 8.2 , V: 6.9"},{"id":"item-17","no":17,"area":"Blending Silo","disiplin":"Mechanical","defect":"Fasilitas emission monitoring Fan 431-FN04","masalah":"","status":"Close","keterangan":"Fasilitas emission monitoring di Fan 431-FN04 belum terpasang pemanen.","feedback":"Extension duct untuk pengukuran dust emission dipasang ketika dilakukan pengukuran (tidak permanen) dan extension duct sudah ada di lokasi.\n(HK mengajukan status Closed)","target":"Sudah JI  22 Jui 2026","do":"D","statusupdate":""},{"id":"item-18","no":18,"area":"Blending Silo","disiplin":"Electrical","defect":"Pembacaan ampere di CCR masih tidak sesuai dengan pengukuran di lokal dan fluktuasi (431-PF02)","masalah":"","status":"Open","keterangan":"Pembacaan saat ini menggunakan corection factor dan masih ada selisih, agar dilakukan perbaikan supaya pembacaanya sama.","feedback":"HK akan mengirimkan e-mail ke FLS untuk mengkonfirmasi pengambilan data arus Pfister Feeder.","target":"AGUSTUS 2026","do":"D","statusupdate":"Tgl 29 Juli pasang trafo CT dan install  kabel , terminasi nunggu pada saat feeding type V stop"},{"id":"item-19","no":19,"area":"Blending Silo","disiplin":"Electrical","defect":"Vibrasi motor 431-FA05 DE & NDE tinggi (horisontal 10,7 mm/s)","masalah":"","status":"Open","keterangan":"Hasil tes vibrasi masih melebihi batas maksimal (Sesuai ISO 10816-1 vibrasi < 4,5mm/s). Disarankan membersihkan impeller Fan untuk mengurangi vibrasi motor.","feedback":"Sesuai dengan ISO 14694 khusus untuk Fan maksimum 6,3mm/s. Impeller akan dibersihkan dan dimonitor terus selama DNP.","target":"Selama DNP","do":"D","statusupdate":"CHECK ULANG 14 JULI : Vibrasi Mtr NDE  A: 6.4 , H: 2.6 , V: 3.2 ,   DE A: 3.4  , H: 7.1 , V: 3.4"},{"id":"item-20","no":20,"area":"Clinker Silo","disiplin":"Elins","defect":"Power socket area bottom clinker","masalah":"belum  tersedia power socket pada PN 04 PN 05 PN 06 )","status":"Open","keterangan":"Power socket di area bottom clinker masih belum dikerjakan","feedback":"HK sudah menerima penawaran vendor dan akan segera dikerjakan.","target":"30 April 2026","do":"O","statusupdate":""},{"id":"item-21","no":21,"area":"Clinker Silo","disiplin":"Mechanical","defect":"Abnormal noise Drive unit 491-AC03","masalah":"","status":"Open","keterangan":"Ada abnormal noise di reducer drive unit 491-AC03 di sekitar shrink disc.","feedback":"Abnormal noise sudah hilang dan akan dimonitoring selama DNP. \n(HK mengajukan status Closed)","target":"Selama DNP","do":"D","statusupdate":""},{"id":"item-22","no":22,"area":"Clinker Silo","disiplin":"Mechanical","defect":"Chute outlet 491-AC04 berlubang","masalah":"","status":"Close","keterangan":"Chute outlet 491-AC04 ke silo clinker sisi timur berlubang","feedback":"HK sudah menerima penawaran vendor untuk perbaikan dengan menambahkan wear plate pada chute tersebut.","target":"Sudah dilakukan JI 21 Mei 2026","do":"D","statusupdate":""},{"id":"item-23","no":23,"area":"Clinker Silo","disiplin":"Elins","defect":"Level sensor 491-L02 sering Error","masalah":"","status":"Close","keterangan":"Level sensor 491-L02 sering Error sehingga perlu dilakukan kalibrasi ulang","feedback":"HK akan melakukan pembersihan sensor dan melakukan rekonfigurasi.","target":"Sudah dilakukan JI 21 Mei 2026","do":"D","statusupdate":""},{"id":"item-24","no":24,"area":"Clinker Silo","disiplin":"Electrical","defect":"Setiap rope switch aktif di Apron Conveyor (491-AC03 & 491-AC04), ketika di-ready-kan muncul indikasi ILK harus reset dari ER.","masalah":"","status":"Close","keterangan":"Modifikasi wiring dan safety relay","feedback":"HK telah melakukan modifikasi wiring sesuai dengan rekomendasi PT Buana pada 9 April 2026.\n(HK mengajukan status Closed)","target":"Sudah dilakukan JI 24 April 2026","do":"D","statusupdate":""},{"id":"item-25","no":25,"area":"Clinker Silo","disiplin":"Electrical","defect":"Setiap rope switch aktif Pan Conveyor (511-PN04,PN05 & PN06), ketika di-ready-kan muncul indikasi ILK harus reset dari ER.","masalah":"","status":"Close","keterangan":"Modifikasi wiring dan safety relay","feedback":"HK telah melakukan modifikasi wiring sesuai dengan rekomendasi PT Buana pada 9 April 2026.\n(HK mengajukan status Closed)","target":"Sudah dilakukan JI 24 April 2026","do":"D","statusupdate":""},{"id":"item-26","no":26,"area":"Clinker Silo","disiplin":"Mechanical","defect":"Kebocoran material di Distribution Gate 491-MW01","masalah":"","status":"Close","keterangan":"Saat kondisi Distribution Gate 491-MW01 tertutup, terdapat material yang mengalir ke 491-AC03. \nSetelah dilakukan pengecekan ternyata terdapat liner blade yang bolong karena aus. Kontraktor diminta untuk memperbaiki.","feedback":"HK sudah menerima penawaran vendor untuk perbaikan dengan mengganti wear plate yang bocor tersebut.","target":"JI 10 JUNI 2026","do":"D","statusupdate":""},{"id":"item-27","no":27,"area":"Clinker Silo","disiplin":"Electrical","defect":"Display HMI module not response di Bag Filter (511-BF07). F1, F2 tidak befungsi","masalah":"","status":"Close","keterangan":"Penggantian HMI module.\nKontraktor sudah melakukan penggantian HMI module.","feedback":"HK sudah melakukan penggantian HMI modul tanggal 4 April 2026.\n(HK mengajukan status Closed).","target":"Sudah dilakukan JI 24 April 2026","do":"D","statusupdate":""},{"id":"item-28","no":28,"area":"Clinker Silo","disiplin":"Electrical","defect":"Display HMI module not response di Bag Filter (511-BF08). F1, F2 tidak befungsi","masalah":"","status":"Close","keterangan":"Penggantian HMI module.\nKontraktor sudah melakukan penggantian HMI module.","feedback":"HK sudah melakukan penggantian HMI modul tanggal 4 April 2026.\n(HK mengajukan status Closed).","target":"Sudah dilakukan JI 24 April 2026","do":"D","statusupdate":""},{"id":"item-29","no":29,"area":"Semen Silo","disiplin":"Civil","defect":"Lantai platform di bawah head 591-BE02 tidak ada penghalang, rawan terperosok","masalah":"","status":"Close","keterangan":"Penambahan toeboard di platform sisi utara BE02.","feedback":"HK akan memasang toeboard di area yang memerlukan","target":"Sudah dilakukan JI 24 April 2026","do":"D","statusupdate":""},{"id":"item-30","no":30,"area":"Semen Silo","disiplin":"Electrical","defect":"Display HMI module not response di Bag Filter (591-BF07). F1, F2 tidak befungsi","masalah":"","status":"Close","keterangan":"Penggantian HMI module","feedback":"HK sudah melakukan penggantian HMI modul tanggal 4 April 2026.\n(HK mengajukan status Closed).","target":"Sudah dilakukan JI 24 April 2026","do":"D","statusupdate":""},{"id":"item-31","no":31,"area":"Semen Silo","disiplin":"Electrical","defect":"Kabel grounding hilang, estimasi 30 meter top silo semen (591-3S04 & S05)","masalah":"","status":"Close","keterangan":"Penggantian Kabel grounding 30 meter menggunakan kabel tembaga","feedback":"HK akan mengajukan TQ agar material yang sudah terpasang (aluminium) dapat diterima.","target":"Sudah JI  22 Jui 2026","do":"D","statusupdate":""},{"id":"item-32","no":32,"area":"Semen Silo","disiplin":"Electrical","defect":"Kabel grounding motor Fan  (591-FN09) hilang di potong Estimasi panjang 13 meter.","masalah":"","status":"Close","keterangan":"Penggantian Kabel grounding 13 meter menggunakan kabel tembaga","feedback":"HK akan mengajukan TQ agar material yang sudah terpasang (aluminium) dapat diterima.","target":"Sudah JI  22 Jui 2026","do":"D","statusupdate":""},{"id":"item-33","no":33,"area":"Semen Silo","disiplin":"Electrical","defect":"Vibrasi Fan  591-FN07 NDE motor V = 5,36 / H = 5,97","masalah":"","status":"Close","keterangan":"Hasil tes vibrasi masih melebihi batas maksimal (Sesuai ISO 10816-1 vibrasi < 4,5mm/s). Disarankan membersihkan impeller Fan untuk mengurangi vibrasi motor.","feedback":"Sesuai dengan ISO 14694, vibrasi ≤ 6,3mm/s kategori Good.\n(HK mengajukan status Closed)","target":"Sudah dilakukan JI 21 Mei 2026","do":"D","statusupdate":""},{"id":"item-34","no":34,"area":"Semen Silo","disiplin":"Electrical","defect":"591-GT05 tidak menunjuk penuh 100% perlu dicheck apabila stop pengisian apakah ada kebocoran atau hanya indicatornya saja","masalah":"","status":"Close","keterangan":"Sesuaikan pembacaan antara Indikator dengan aktual opening gate","feedback":"Limit switch tidak perlu di adjust (sesuai saran TA CP). HK akan melakukan marking ulang skala bukaan GT di lokasi.","target":"Sudah dilakukan JI 21 Mei 2026","do":"D","statusupdate":""},{"id":"item-35","no":35,"area":"Semen Silo","disiplin":"Mechanical","defect":"Pressure gauge QM di  silo 591-3S05 sisi selatan rusak","masalah":"","status":"Close","keterangan":"Penggantian Pressure Gauge","feedback":"HK akan melakukan penggantian Pressure Gauge yang rusak.","target":"Sudah dilakukan JI 24 April 2026","do":"D","statusupdate":""},{"id":"item-36","no":36,"area":"Semen Silo","disiplin":"Mechanical","defect":"Pressure gauge ke 62G-BF01 kaca hilang dan bocor di seal water drain","masalah":"","status":"Close","keterangan":"Penggantian Pressure Gauge dan perbaikkan seal warter drain.","feedback":"HK akan melakukan penggantian Pressure Gauge yang rusak.","target":"Sudah dilakukan JI 24 April 2026","do":"D","statusupdate":""},{"id":"item-37","no":37,"area":"Semen Silo","disiplin":"Electrical","defect":"Kabel grounding Fan Bag filter (62F-FN01) lepas.","masalah":"","status":"Close","keterangan":"Pemasangan kembali kabel grounding","feedback":"HK akan memasang kembali kabel grounding","target":"Sudah dilakukan JI 8 Mei 2026","do":"D","statusupdate":""},{"id":"item-38","no":38,"area":"Semen Silo","disiplin":"Mechanical","defect":"Regulator pressure Bag filter (641-BF02) bocor di seal water trap","masalah":"","status":"Close","keterangan":"Perbaikan seal water trap","feedback":"HK sudah melakukan perbaikan seal water trap yang bocor tanggal 25 Maret 2026\n(HK mengajukan status Closed)","target":"Sudah dilakukan JI 8 Mei 2026","do":"D","statusupdate":""},{"id":"item-39","no":39,"area":"Semen Silo","disiplin":"Electrical","defect":"Vibrasi Motor Fan 641-FN02 Axial tinggi = 7,68 mm/s","masalah":"","status":"Close","keterangan":"Hasil tes vibrasi masih melebihi batas maksimal (Sesuai ISO 10816-1 vibrasi < 4,5mm/s). Disarankan membersihkan impeller Fan untuk mengurangi vibrasi motor.","feedback":"Sesuai ISO 14694 vibrasi ≤ 6,3mm/s kategori Good, HK akan melakukan pembersihan impeller dan dimonitor selama DNP.","target":"Sudah dilakukan JI 8 Mei 2026","do":"D","statusupdate":""},{"id":"item-40","no":40,"area":"Semen Silo","disiplin":"Electrical","defect":"Tagging kabel di Bucket Elevator 591-BE02 ada yang tidak sesuai alamat.","masalah":"","status":"Close","keterangan":"Kontraktor agar melakukan mapping & retagging kabel","feedback":"Addressing sudah diperbaiki, tagging akan dicetak dan dipasang ulang.","target":"Sudah dilakukan JI 21 Mei 2026","do":"D","statusupdate":""},{"id":"item-41","no":41,"area":"Semen Silo","disiplin":"Electrical","defect":"Panel I/O, PSU 5A belum diganti (6C1-2J3.U1) karena rusak","masalah":"","status":"Close","keterangan":"Pemasangan PSU sesuai desain","feedback":"HK sudah melakukan penggantian PSU yang rusak tanggal \n(HK mengajukan status Closed)","target":"Sudah JI  22 Jui 2026","do":"D","statusupdate":""},{"id":"item-42","no":42,"area":"Semen Silo","disiplin":"Electrical","defect":"Panel I/O, PSU 5A belum diganti (6C1-2J3.U2) karena rusak","masalah":"","status":"Close","keterangan":"Pemasangan PSU sesuai desain","feedback":"HK sudah melakukan penggantian PSU yang rusak \n(HK mengajukan status Closed)","target":"Sudah JI  22 Jui 2026","do":"D","statusupdate":""},{"id":"item-43","no":43,"area":"Semen Silo","disiplin":"Electrical","defect":"Proximity indikasi temp coupling di Bucket Elevator (591-BE02) rusak","masalah":"","status":"Open","keterangan":"Penggantian sensor yang rusak","feedback":"HK sudah melakukan PO dan MOS diperkirakan tanggal 30 April 2026","target":"AGUSTUS 2026","do":"D","statusupdate":"Update : sensor sudah dipasang tapi belum ada penunjukan. Akandicross check di 591-Be01"},{"id":"item-44","no":44,"area":"Semen Silo","disiplin":"Mechanical","defect":"Automatic Sampler 491-SM02","masalah":"Belum dilakukan pengetesan","status":"Open","keterangan":"Pada 31 Maret 2026 dilakukan Hot test untuk pengiriman Sampler dan telah berhasil mengambil sample semen seberat 477,6gram dan 375,1gram.\nMasih perlu dilakukan modifikasi programing (disyaratkan saat finish mill TQ01 running & 591-GT04  mengarah ke New silo 4 & 5, sampler running)","feedback":"HK sudah melakukan pengujian kembali tanggal 31 Maret 2026. Kapsul No. 1 berat sample 477,6gram dan No. 2 berat sample 375,1gram berhasil terkirim / terhisap POLAB. Modifikasi program dengan menambahkan running 591-GT04.","target":"W4 JULI 2026","do":"D","statusupdate":"W4 , Tgl 29Juli sudah dites secara auto, sistem bekerja dg baik, selanjutnya akan  dilakukan setting timmer running screw"},{"id":"item-45","no":45,"area":"Semen Silo","disiplin":"Elins","defect":"Fire Suspression System","masalah":"1. FSS belum secara otomatis memutus daya keluaran UPS yang terpasang di ruangan tersebut.\n2. FSS belum secara otomatis memutus pasokan daya peralatan yang terpasang di ruangan tersebut.","status":"Open","keterangan":"Masih terdapat kekurangan :\n- Remaining pekerjaan Programming pada fire rescue room eksisting.","feedback":"Sinyal sudah sampai CCR (dari FM200), HK akan berkirim surat ke Enjinir tanggal 13 April 2026 terkait integrasi yang akan dilakukan oleh tim CCR karena HK tidak ada akses ke TIS SBI Plant.","target":"W4 JULI 2026","do":"D","statusupdate":"W4 , HK akan berkirim setelah dapat info address remote DI . Tgl  29 Juli sudah dilakukan pengecekan address remote DI oleh HK + SBI"},{"id":"item-46","no":46,"area":"Semen Silo","disiplin":"Elins","defect":"Temperatur Trafo","masalah":"Temperatur Trafo belum bisa ditampilkan di CCR secara kontinyu","status":"Open","keterangan":"Penggantian dan pengadaan sensor temperatur yang sudah terpasang (B&D) agar sensor temperatur dapat dihubungkan dan dikontrol dari CCR. \nPerbaikan telah dicoba dengan penambahan modul IOT namun Temperatunya tetap belum bisa terbaca di CCR.","feedback":"HK akan melakukan penggantian material converter yang rusak. Estimasi MOS 7 Mei 2026.","target":"AGUSTUS 2026","do":"D","statusupdate":""},{"id":"item-47","no":47,"area":"Semen Silo","disiplin":"Elins","defect":"Pada saat programming dijalankan secara Auto Proportional Integral Derivate (Auto PID) aktual feedrate discharge Semen Silo ke feeding Tube Conveyor (641-TB01) terjadi fluktuasi tinggi.","masalah":"Update 16/10/25  Re-Open\nPID masih terjadi spike di atas 1100 dan target 1000 tph belum tercapai secara konstan dalam 4 jam","status":"Close","keterangan":"Kontraktor belum menemukan Setting PID sesuai yang memiliki fluktuasi rendah, saat ini Kontraktor memakai setting PID terbaik saat PGT.","feedback":"Sesuai hasil rapat-rapat Hi-Level, PGT 2 dilakukan dengan kondisi apa adanya (as is condition) dengan beberaapa improvement di 641-VS01 dan 641-BC01 (increase belt speed). (HK mengajukan status Closed)","target":"Sudah JI  22 Jui 2026","do":"D","statusupdate":""},{"id":"item-48","no":48,"area":"Semen Silo","disiplin":"Sipil","defect":"Hanger Beams Semen Silo","masalah":"","status":"Close","keterangan":"Enjinir mengeluarkan Surat No. 2385/TLVR-PM/C/02/2026, dan Surat No. 2387/TLVR-PM/C/02/2026.\nKarena penolakan Kontraktor, Pengguna Jasa akan menindaklanjuti dan melibatkan pihak ketiga untuk melaksanakan pekerjaan tersebut -> Perlu Pemberitahuan.\nSemua biaya yang dikeluarkan oleh Pengguna Jasa dalam melakukan pekerjaan perbaikan ini akan ditanggung oleh Kontraktor -> Sub-Klausul 2.5 [Klaim]","feedback":"Item ini akan dibahas dalam forum pembahasan Klaim.","target":"Sudah JI  22 Jui 2026","do":"O","statusupdate":""},{"id":"item-49","no":49,"area":"Semen Silo","disiplin":"Safety","defect":"Tangga dari platform loading spout menuju bulk truck dibuat Adjustable untuk orang ketika beroperasi loading","masalah":"","status":"Open","keterangan":"Modifikasi dan peninjauan ulang dengan safety","feedback":"HK akan membuatkan tangga lipat.","target":"AGUSTUS 2026","do":"D","statusupdate":"Update : Drawing sedang dibuat oleh HK ( belum selesai )"},{"id":"item-50","no":50,"area":"Semen Silo","disiplin":"Mechanical","defect":"Compressor D33-CX04 & D33-CX05","masalah":"","status":"Close","keterangan":"Saat ini kompresor running bersamaan, dalam data sheet desain dijelaskan kompressor 1 running dan 1 standby.","feedback":"HK akan mengirimkan justifikasi teknis terkait dengan kondisi kompresor yang 1 running dan 1 backup","target":"Sudah JI  22 Jui 2026","do":"D","statusupdate":""},{"id":"item-51","no":51,"area":"Semen Silo","disiplin":"Electrical","defect":"Di Compressor room under silo semen, kabel grounding hilang, estimasi 13.5 meter","masalah":"","status":"Close","keterangan":"Penggantian kabel grounding 13.5 meter menggunakan kabel tembaga","feedback":"HK akan mengajukan TQ agar material yang sudah terpasang (aluminium) dapat diterima.","target":"Sudah JI  22 Jui 2026","do":"D","statusupdate":""},{"id":"item-52","no":52,"area":"Semen Silo","disiplin":"Electrical","defect":"ER New Packing Kabel grounding hilang, estimasi 30 meter. Sementara sudah di ganti kabel twist","masalah":"","status":"Close","keterangan":"Penggantian kabel grounding (sekitar 30 meter) menggunakan kabel tembaga","feedback":"HK akan mengajukan TQ agar material yang sudah terpasang (aluminium) dapat diterima.","target":"Sudah JI  22 Jui 2026","do":"D","statusupdate":""},{"id":"item-53","no":53,"area":"Semen Silo","disiplin":"Electrical","defect":"ER New Packing Ada beberapa lubang pada jalur cable yang masuk ke dalam ER","masalah":"","status":"Close","keterangan":"Penutupan lubang menggunakan seal foam","feedback":"HK sudah melakukan penutupan lubang dengan seal foam tanggal 8 April 2026.\n(HK mengajukan status Closed)","target":"Sudah dilakukan JI 24 April 2026","do":"D","statusupdate":""},{"id":"item-54","no":54,"area":"Semen Silo","disiplin":"Electrical","defect":"Di ER New packing AC ruang switchgear bocor","masalah":"","status":"Close","keterangan":"Kontraktor memperbaiki/service AC yang bocor","feedback":"HK akan melakukan servis berkala pada AC yang terindikasi bocor.","target":"Sudah dilakukan JI 8 Mei 2026","do":"D","statusupdate":""},{"id":"item-55","no":55,"area":"Semen Silo","disiplin":"Electrical","defect":"Di ER New Packing Temperatur Ruangan VSD Tube Conveyor cukup tinggi (33-35oC) karena jalur outlet AC berada diatas. Udara panas keluaran VSD bertabrakan dengan udara dingin dari AC. Sehingga tidak mampu mendinginkan VSD","masalah":"","status":"Open","keterangan":"Temperature ruangan VSD disesuaikan dengan ER","feedback":"Suhu ruangan VSD masih dalam ambang batas yang disyaratkan.\n(HK mengajukan status Closed)","target":"Tidak Dikerjakan","do":"D","statusupdate":"Tidak Dikerjakan"},{"id":"item-56","no":56,"area":"Semen Silo","disiplin":"Electrical","defect":"Panel I/O, PSU 5A belum diganti (6C1-2J3.U5) karena rusak","masalah":"","status":"Close","keterangan":"Pemasangan PSU sesuai desain","feedback":"HK akan melakukan penggantian PSU 5A yang rusak","target":"Sudah dilakukan JI 8 Meil 2026","do":"D","statusupdate":""},{"id":"item-57","no":57,"area":"Tube Conveyor","disiplin":"Sipil","defect":"Opening Flap","masalah":"Handle Siding & Opening Flap belum terpasang sesuai IFC drawing","status":"Open","keterangan":"Opening Flap untuk pengecekan roller di tube conveyor tidak dikerjakan.","feedback":"Opening Flap untuk pengecekan roller di tube conveyor tidak dikerjakan.","target":"31 Juli 2026","do":"O","statusupdate":""},{"id":"item-58","no":58,"area":"Tube Conveyor","disiplin":"Sipil","defect":"Reinstatement Ex Pekerjaan Pondasi (install dinding pagar, tangga, pagar BRC, lighting , pengecatan bandwall, pagar di laydown Jetty dll)","masalah":"Belum  selesainya pekerjaan reinstatement","status":"Open","keterangan":"Reinstatement Pagar, Jalan, Cansteen  sudah selesai\nLampu existing masih belum dikembalikan sesuai fungsinya. (Posisi lampu diatas BC existing dan dibawah Tube Conveyor namun arahnya tidak mengarah pada area BC).","feedback":"HK menyampaikan efek penerangan kondisi saat ini masih sama dengan kondisi sebelumnya.\n(HK mengajukan status Closed)","target":"Tidak Dikerjakan","do":"D","statusupdate":"Tidak Dikerjakan"},{"id":"item-59","no":59,"area":"Tube Conveyor","disiplin":"Elins","defect":"Sertifikasi :\nLightning protection.","masalah":"Belum dilakukan Sertifikasi.","status":"Close","keterangan":"Sertifikasi masih dalam proses perijinan.","feedback":"HK telah mengirimkan sertifikasi lightning protection tube conveyor tanggal 2 April 2026.\n(HK mengajukan status Closed)","target":"Sudah dilakukan JI 24 April 2026","do":"D","statusupdate":""},{"id":"item-60","no":60,"area":"Tube Conveyor","disiplin":"Mechanical","defect":"Pembacaan totalizer pada Belt Scale 641-BW02 tidak sama dengan 641-BW01.","masalah":"Update 16/10/25 Re-Open\nDeviasi pembacaan Totalizer BW1 & BW2 terlalu jauh  Deviasinya","status":"Open","keterangan":"Kalibrasi & pemrograman totalizer 641-BW02 sudah dilakukan namun pembacaanya belum akurat karena kondisi material masih belum stabil. Perlu dilakukan evaluasi penempatan Load cell agar tidak terlalu dekat feeding poin.","feedback":"1. Pembacaan feedrate dan totalizer antar 641-BW01 dengan 641-BW02 berbeda karena material di atas 641-BW02 sliding\n2. Lokasi 641-BW02 tidak memungkinkan untuk digeser lebih ke Utara karena mendekati titik transisi Tripper cart yang juga akan membuat pembacaan tidak akurat.\n(HK mengajukan status Closed)","target":"Tidak Dikerjakan","do":"D","statusupdate":"Tidak Dikerjakan"},{"id":"item-61","no":61,"area":"Tube Conveyor","disiplin":"Electrical","defect":"Belum ada tagging SAC (SBI Aset Code), total 130 rope switch (641-TB01)","masalah":"","status":"Open","keterangan":"Pemasangan Name plate SAC untuk rope switch","feedback":"HK menyampaikan tidak diperlukan tagging pada pull cord switch, marking sudah ada disetiap galery yang ada pull cord switch nya. HK juga menyampaikan lokasi berupa tabel untuk identifikasi dan lokasi pull cord switch.\n(HK mengajukan status Closed)","target":"Tidak Dikerjakan","do":"D","statusupdate":"Tidak Dikerjakan"},{"id":"item-62","no":62,"area":"Tube Conveyor","disiplin":"Electrical","defect":"Indikasi feed back running lokal Magnetic separator (641-MS01) tidak nampak di layar CCR jetty.","masalah":"","status":"Open","keterangan":"Modifikasi programming Magnetic Separator agar terbaca di CCR new Jetty","feedback":"HK menyampaikan tampilan sudah ada di HMI Beumer.\n(HK mengajukan status Closed)","target":"Tidak Dikerjakan","do":"D","statusupdate":"Tidak Dikerjakan"},{"id":"item-63","no":63,"area":"Tube Conveyor","disiplin":"Electrical","defect":"Kabel grounding di sepanjang beam support tube conveyor hilang. Sementara di ganti menggunakan kabel twist. Sekitar 84 titik x 1 meter (641-TB01)","masalah":"","status":"Open","keterangan":"Penggantian kabel grounding 84 titik x 1 meter menggunakan kabel tembaga","feedback":"HK akan mengajukan TQ agar material yang sudah terpasang (aluminium) dapat diterima.","target":"AGUSTUS 2026","do":"D","statusupdate":""},{"id":"item-64","no":64,"area":"Jetty Tripper","disiplin":"Electrical","defect":"641-BC01 Pull Cord switch sisi timur rusak (kondisi sekarang masih perbaikan sementara)","masalah":"","status":"Close","keterangan":"Pemasangan pull chord switch baru","feedback":"HK akan mengganti pull cord switch","target":"Sudah JI  22 Jui 2026","do":"D","statusupdate":""},{"id":"item-65","no":65,"area":"Jetty Tripper","disiplin":"Electrical","defect":"ER New Jetty Indikasi pembacaan temperature ruangan tidak sesuai di monitor CCR Jetty","masalah":"","status":"Close","keterangan":"Kontraktor melakukan reprogamming, agar indikasi temperature ruangan dan yang terbaca di CCR New Jetty sama.","feedback":"HK menyatakan akan melakukan pemrograman ulang setelah dilakukan perbaikan address sensor temperatur.","target":"Sudah dilakukan JI 21 Mei 2026","do":"D","statusupdate":""},{"id":"item-66","no":66,"area":"Jetty Tripper","disiplin":"Electrical","defect":"ER new Jetty Ada beberapa lubang pada jalur cable yang masuk ke dalam ER","masalah":"","status":"Close","keterangan":"Penutupan lubang menggunakan seal foam","feedback":"HK sudah melakukan penutupan lubang dengan seal foam tanggal 8 April 2026.\n(HK mengajukan status Closed)","target":"Sudah dilakukan JI 27 April 2026","do":"D","statusupdate":""},{"id":"item-67","no":67,"area":"Jetty Tripper","disiplin":"Elins","defect":"Alarm fire suppresion berbunyi untuk ruang Trafo 3 Jetty .","masalah":"","status":"Close","keterangan":"Agar di check sensor detektor dan modul controlnya.\nKontraktor sudah melakukan perbaikan.","feedback":"HK akan melakukan pengecekan sensor bersama Adiwarna (vendor HK) yang dijadwalkan tanggal 30 April 2026","target":"Sudah JI  22 Juli 2026","do":"D","statusupdate":""},{"id":"item-68","no":68,"area":"Jetty Tripper","disiplin":"Mechanical","defect":"Tidak ada sealing air terpasang 641-RF07","masalah":"","status":"Open","keterangan":"Pemasangan tubing sealing air system ke jalur udara kompresor","feedback":"Nipple pada 641-RF07 adalah asesori umum, untuk industri semen tidak diperlukan pemanfaatan sealing air kecuali untuk bag filter food procesing.\n(HK mengajukan status Closed)","target":"W4 JULI 2026","do":"D","statusupdate":""},{"id":"item-69","no":69,"area":"Jetty Tripper","disiplin":"Electrical","defect":"Di New Jetty Kabel grounding yang terpasang menggunakan besi padatan galvanis 3 lonjor. Total ada 7 titik. Total panjang grounding rod size 5/8\" x 12 meter x 7 titik","masalah":"","status":"Close","keterangan":"Penggantian kabel grounding & grounding rod dengan material kabel dan batang tembaga","feedback":"Material sudah on site, HK akan mengganti kabel grounding dan grounding rod sesaat setelah TOC keluar.","target":"JI 10 JUNI 2026","do":"D","statusupdate":""},{"id":"item-70","no":70,"area":"Jetty Tripper","disiplin":"Sipil","defect":"Permukaan slab Jetty & Trestle","masalah":"Terjadi crack pada slab bagian atas & bawah","status":"Open","keterangan":"Injection crack belum selesai dikerjakan akan dilanjutkan pada masa DNP","feedback":"HK sudah melakukan injection crack baik di Trestle maupun di Jetty dan akan dimonitoring selama DNP","target":"DNP","do":"D","statusupdate":""},{"id":"item-71","no":71,"area":"Jetty Tripper","disiplin":"Sipil","defect":"Rubber Curtain area traveling Ship Loader","masalah":"1. Masih tampias air karena materialnya tidak proper (banyak yang sudah rusak)\n2. Ketebalan shading bawah tidak sesuai dengan ER (<0.6 mm )","status":"Open","keterangan":"Pada saat hujan disertai angin masih terjadi air masuk melalui rubber curtain, perlu perbaikan dan pengadaan material yang proper. Kontraktor tidak akan mengerjakan.","feedback":"HK menyampaikan bahwa Rubber Curtain sudah tidak ada air hujan yang masuk ke dalam 641-BC01 dan HK tidak akan mengerjakan.","target":"DNP","do":"D","statusupdate":"Ada yg sobek dan lepas di P76 ,10 Juli 2026"},{"id":"item-72","no":72,"area":"Jetty Tripper","disiplin":"Sipil","defect":"Guardrail pada area Jetty & Trestle Existing","masalah":"Relokasi guardrail belum dilaksanakan (ada dalam price schedule 2.8)","status":"Open","keterangan":"Pemindahan Guardrail tidak dikerjakan Kontraktor","feedback":"Pemindahan Guardrail tidak dikerjakan Kontraktor","target":"31 Mei 2026","do":"O","statusupdate":""},{"id":"item-73","no":73,"area":"Jetty Tripper","disiplin":"Mechanical","defect":"Service hoist for maintenance Ship Loader","masalah":"Belum terpasang","status":"Open","keterangan":"Unit Hoist sudah On site tetapi belum terpasang","feedback":"Unit Hoist sudah on site, instalasi dispute item sehingga tidak dilakukan HK karena menurut Siwertell tidak diperlukan.","target":"31 Juli 2026","do":"O","statusupdate":""},{"id":"item-74","no":74,"area":"Jetty Tripper","disiplin":"Mechanical","defect":"Vibrator Loading Spout Shiploader","masalah":"Vibrator pada loading spout belum terpasang","status":"Open","keterangan":"Pengadaan Vibrator sudah dilakukan tetapi belum on site, jadwal vibrator on site & pemasangan pada akhir April 2026","feedback":"Sesuai info Siwertell, pengiriman  akan dilakukan pada akhir April 2026. Instalasi membutuhkan waktu 14 hari kalender.","target":"15 Mei 2026","do":"O","statusupdate":""},{"id":"item-75","no":75,"area":"Jetty Tripper","disiplin":"Elins","defect":"Temperatur Trafo","masalah":"Temperatur Trafo belum bisa ditampilkan di CCR secara kontinyu","status":"Open","keterangan":"Penggantian dan pengadaan sensor temperatur yang sudah terpasang (B&D) agar sensor temperatur dapat dihubungkan dan dikontrol dari CCR. \nPerbaikan telah dicoba dengan penambahan modul IOT namun Temperatunya tetap belum bisa terbaca di CCR.","feedback":"HK menyampaikan hardware sudah terpasang dan perlu pemrograman.","target":"AGUSTUS 2026","do":"D","statusupdate":""},{"id":"item-76","no":76,"area":"Jetty Tripper","disiplin":"Elins","defect":"Fire Suspression System","masalah":"1. FSS belum secara otomatis memutus daya keluaran UPS yang terpasang di ruangan tersebut.\n2. FSS belum secara otomatis memutus pasokan daya peralatan yang terpasang di ruangan tersebut.","status":"Open","keterangan":"Masih terdapat kekurangan :\n- Pulling Kabel Control dari Panel I/O ke incoming Panel ACC (Outgoing UPS) & Shunt-Trip sudah dikerjakan namun belum diterminasi.\n- Pulling Kabel Control dari Panel I/O ke incoming Switchgear 6,3KV sudah dikerjakan namun belum diterminasi.\n- Remaining pekerjaan Programming pada fire rescue room eksisting.","feedback":"Sinyal sudah sampai CCR (dari FM200), HK akan berkirim surat ke Enjinir tanggal 13 April 2026 terkait integrasi yang akan dilakukan oleh tim CCR karena HK tidak ada akses ke TIS SBI Plant.","target":"W4 JULI 2026","do":"D","statusupdate":""},{"id":"item-77","no":77,"area":"Jetty Tripper","disiplin":"Elins","defect":"Suhu panel VSD mencapi 34°C (Data saat PGT-2) saat Feeding 700 tph pada tube Conveyor","masalah":"Apabila tempratur di atas 30'C akan mengakibatkan short","status":"Open","keterangan":"Pemindahan 1 Unit indoor AC dari MCC room ke VSD room belum dilakukan oleh kontraktor. (Kembali ke design kalkulasi bahwa di ruang VSD terdapat 2 unit AC running)","feedback":"1. Konsep VSD room adalah sistem ruangan dalam ruangan (room within room) sehingga terproteksi penuh dari paparan debu dan kotoran luar.\n2. Saat pintu VSD dibuka, temperatur ruangan VSD tetap terjaga dibawah 24oC sesuai yang disyaratkan. Kondisi tersebut thermal dispersion (sebaran panas) tidak memberikan dampak pada ruangan lain.\n(HK mengajukan status Closed)","target":"Tidak Dikerjakan","do":"D","statusupdate":"Tidak Dikerjakan"},{"id":"item-78","no":78,"area":"Jetty Tripper","disiplin":"Mechanical","defect":"Terjadi dusty di depan area Skirt Board (Data saat PGT-2) pada Belt Conveyor (641-BC01)","masalah":"Update 16/10/25 Re-Open\n1.Saat PGT timbul dusty di depan skirt board dan material masih tidak stabil ( spill out dari belt ), \n2,Ketika emergency stop, terjadi tumpahan material sepanjang 5 meter dari ujung Skirtboard","status":"Open","keterangan":"Agar tidak terjadi dusty :\n1. Menambah Panjang skirt board sampai dengan batas aman (Tidak ada spillage). \n2. Modifikasi Pipa hisapan (dedusting pipe) di ujung sisi utara skirt board masih belum di sambung ke Bag filter 641-BF07","feedback":"HK menyampaikan kondisi dusty terjadi ketika opening damper 641-BF07 terbuka 60% yang seharusnya antar 85% - 90%. Setelah dikembalikan ke setting normal, dusty di ujung skirtboard berkurang dan kembali negatif.\n(HK mengajukan status Closed)","target":"Tidak Dikerjakan","do":"D","statusupdate":"Tidak Dikerjakan"},{"id":"item-79","no":79,"area":"Jetty Tripper","disiplin":"Mechanical","defect":"Terjadi tumpahan material semen pada BC-Tripper akibat back fall material pada inclinasi Tripper Car.","masalah":"Update 16/10/25 Re-Open\nTimbul back flow pada saat feedrate >950 tph\n yang mengakibatkn semen tumpah pada area pertemuan BC01 dg tripper cart","status":"Close","keterangan":"Menggunakan Filling degree material & Kecepatan Optimum 641-BC01 sesuai dengan rekomendasi LAPI ITB (Prof Yazid).","feedback":"HK menyampaikan 641-BC01 tidak bisa mencapai 1000tph continuous kecuali kecepatan belt ditingkatkan dan di setting 2,6 - 2,8 m/s sesuai kajian LAPI ITB (Prof. Yazid).\n(HK mengajukan status Closed)","target":"Sudah diklaim Employer","do":"D","statusupdate":""},{"id":"item-80","no":80,"area":"Jetty Tripper","disiplin":"Mechanical","defect":"Masih banyak tumpahan material semen ke reject dari 641-VS01","masalah":"Update 16/10/25 Re-Open:\n- Material semen yang tumpah masih berupa material halus\n- Material makain banyak ketika screen di lepas","status":"Open","keterangan":"Penampungan Reject masih positif, indikasi kapasitas air flow dedusting bagfilter 641-BF07 di Vibrating screen belum optimal.","feedback":"HK menyampaikan sedang dilakukan pengecekan perhitungan kapasitas 641-BF07 terhadap kondisi aktual. Hasil perhitungan akan disampaikan.","target":"Tidak Dikerjakan","do":"D","statusupdate":"Tidak Dikerjakan"},{"id":"item-81","no":81,"area":"Jetty Tripper","disiplin":"Mechanical","defect":"Spiral Outer Bellows Loading Spout Shiploader","masalah":"Outer spirral mengalami patah dari bilows mengalami deformasi  2 segment dan terdapat lubang bari","status":"Close","keterangan":"Spiral Outer Bellows Loading Spout mengalami deformasi dan belum dilakukan perbaikan.","feedback":"Kerusakan dan deformasi pada Bellows Loading Spout karena hisapan dari airslide / bag filter kapal yang bukan peruntukan dari desain Bellows tersebut. Penggantian bukan lingkup HK.","target":"JI  10 JUNI2026","do":"D","statusupdate":""},{"id":"item-82","no":82,"area":"Jetty Tripper","disiplin":"Sipil","defect":"Sertifikat Persetujuan Bangunan Gedung ITB","masalah":"Updaet 16/10/2025\nPPBG Belum ada","status":"Open","keterangan":"Pengurusan sertifikat masih dalam proses perijinan","feedback":"Sertifikat akan disampaikan setelah selesai. Saat ini dokumen KKRK dari SBI Plant belum terbit.","target":"AGUSTUS 2026","do":"D","statusupdate":"Update :Dokumen KRK sudah diteruskan ke HK tgl 24 Juli"},{"id":"item-83","no":83,"area":"Jetty Tripper","disiplin":"Sipil","defect":"Akses emergency di sisi utara BC-tripper (641-BC01)","masalah":": Diperlukan akes tambahan untuk jalur evakuasi","status":"Open","keterangan":"Kontraktor tidak akan melakukan pekerjaan penambahan akses emergency.","feedback":"HK menyampaikan akses emergency tidak diperlukan.","target":"30 Juni 2026","do":"O","statusupdate":""},{"id":"item-84","no":84,"area":"Jetty Tripper","disiplin":"Elins","defect":"Sarana  SBNP ( lampu buoy )","masalah":"Lampu suar buoy mati","status":"Open","keterangan":"Lampu bouy masih ada 2 unit yang rusak perlu dilakukan perbaikan.","feedback":"HK sudah mengganti lampu suar Buoy yang mati 2 buah (DSI 1772 dan DSI 1773), sedang lainnya HK hanya melakukan relokasi saja tidak termasuk peningkatan fasilitas penambahan lampu suar.\n(HK mengajukan status Closed)","target":"20 Mei 2026","do":"O","statusupdate":""},{"id":"item-85","no":85,"area":"Jetty Tripper","disiplin":"Electrical","defect":"Setting kecepatan 641-BC01 belum bisa dilakukan lewat CCR Jetty saat running group","masalah":"","status":"Open","keterangan":"Kondisi sekarang perubahan speed BC01 dilakukan dari VSD. Kontraktor diminta untuk melakukan perbaikan agar perubahan speed BC01 bisa dilakukan lewat CCR Jetty.","feedback":"VSD berfungsi untuk starting equipment untuk mendapatkan setting kecepatan yang tepat. Ketika sudah mendapatkan setting kecepatan yang optimal, maka 641-BC01 dijalankan dengan kecepatan yang konstan.\n(HK mengajukan status Closed)","target":"W4 JULI 2026","do":"D","statusupdate":""},{"id":"item-86","no":86,"area":"Shiploader","disiplin":"Mechanical","defect":"Compressor 641-CX03 di Ship Loader Overheating","masalah":"","status":"Close","keterangan":"Sudah dilakukan pengecekan system air driyer dan cleaning filter namun masih overheating pada compressor","feedback":"HK menyampaikan teknisi KAESER sudah melakukan pemeriksaan dan troublke shooting di lokasi, perlu penggantian V-Belt dan sensor dewpoint temperature, juga menyarankan agar dipasang exhaust dan intake fan pada ruang kompresor.","target":"V-Belt diganti 13 April 2026 - JI  10 JUNI 2026\nSensor temperatur dan exhaust 31 Mei 2026","do":"D","statusupdate":""},{"id":"item-87","no":87,"area":"Shiploader","disiplin":"Mechanical","defect":"Emisi Dust Tinggi pada Bag Filter 641-BF08","masalah":"","status":"Close","keterangan":"Outlet fan pada Bag filter masih terlihat emisi dust yang tinggi agar diperiksa bag dan sambungannya.","feedback":"HK sudah melakukan pemeriksaan dan pembersihan dan akan dimonitoring saat running kembali.","target":"Sudah JI  22 Juli 2026","do":"D","statusupdate":""},{"id":"item-88","no":88,"area":"Shiploader","disiplin":"Mechanical","defect":"Extension Chute Loading Spout","masalah":"","status":"Close","keterangan":"Hambatan operasi pada extention chute (pipa outlet kurang panjang) saat pengisian semen ke kapal dengan sistem palka tertutup.","feedback":"HK akan menambahkan segmen pipa pada extension chute yang sudah difabrikasi.","target":"Sudah dilakukan JI 8 Mei 2026","do":"D","statusupdate":""},{"id":"item-89","no":89,"area":"Shiploader","disiplin":"Electrical","defect":"Motor slewing Shiploader M3 brake rusak. Coil brake putus","masalah":"","status":"Close","keterangan":"Penggantian brake M3 baru","feedback":"Sesuai e-mail Siwertell, unit brake akan dikirimkan ke Siwertell 7 April 2026 dari vendor mereka. Pengiriman akan dilakukan di W-4 atau W-5 April 2026. On site diperkirakan pada W-1 Mei 2026.","target":"Sudah JI  22 Juli 2026","do":"D","statusupdate":""},{"id":"item-90","no":90,"area":"Umum","disiplin":"Sipil","defect":"Maket Proyek","masalah":"","status":"Open","keterangan":"Kontraktor membuat 1 maket (miniature) Project Talavera dan 1 maket seluruh fasilitas Tuban Plant.","feedback":"HK akan mengerjakan pada DNP","target":"30 Mei 2026","do":"O","statusupdate":""},{"id":"item-91","no":91,"area":"Umum","disiplin":"Sipil","defect":"Master Key","masalah":"","status":"Open","keterangan":"Kontraktor membuat sistem Master Key untuk seluruh kunci-kunci pintu yang dibuat (sesuai section V ER Chapter 6 StDC 5.7)","feedback":"HK akan mengajukan TQ agar dapat menggunakan kunci yang ada saat ini (tanpa Master Key)","target":"W4 JULI 2026","do":"O","statusupdate":""}]</script>
+<script>
+(function () {
+  "use strict";
+  var SEED = JSON.parse(document.getElementById("seed-data").textContent);
+  var API = "/api/state";
+  var ACTOR_KEY = "talavera-board-actor";
+
+  var AREA_ORDER = [];
+  SEED.forEach(function (d) { if (AREA_ORDER.indexOf(d.area) === -1) AREA_ORDER.push(d.area); });
+  var DISIPLIN_LIST = [];
+  SEED.forEach(function (d) { if (DISIPLIN_LIST.indexOf(d.disiplin) === -1) DISIPLIN_LIST.push(d.disiplin); });
+  DISIPLIN_LIST.sort();
+
+  var overrides = {};
+  var filters = { search: "", areas: new Set(), disiplin: "all", status: "all" };
+  var openAreaIds = new Set(AREA_ORDER);
+  var openItemIds = new Set();
+  var saveTimers = {};
+  var pollTimer = null;
+  var readOnly = false;
+
+  var actorInput = document.getElementById("actor-input");
+  actorInput.value = localStorage.getItem(ACTOR_KEY) || "";
+  actorInput.addEventListener("change", function () { localStorage.setItem(ACTOR_KEY, actorInput.value.trim()); });
+  function actorName() { return (actorInput.value || "").trim(); }
+
+  function escapeHtml(s) {
+    return String(s == null ? "" : s).replace(/[&<>"']/g, function (c) {
+      return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c];
+    });
+  }
+  function debounce(fn, ms) {
+    return function () {
+      var id = arguments[0];
+      clearTimeout(saveTimers[id]);
+      var args = arguments, ctx = this;
+      saveTimers[id] = setTimeout(function () { fn.apply(ctx, args); }, ms);
+    };
+  }
+  function fmtTime(iso) {
+    if (!iso) return "";
+    var d = new Date(iso);
+    if (isNaN(d)) return "";
+    var now = new Date();
+    var sameDay = d.toDateString() === now.toDateString();
+    var hh = String(d.getHours()).padStart(2, "0"), mm = String(d.getMinutes()).padStart(2, "0");
+    if (sameDay) return "hari ini " + hh + ":" + mm;
+    var bulan = ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"];
+    return d.getDate() + " " + bulan[d.getMonth()] + " " + hh + ":" + mm;
+  }
+
+  function merged(base) {
+    var o = overrides[base.id];
+    if (!o) return base;
+    return Object.assign({}, base, {
+      status: o.status !== undefined ? o.status : base.status,
+      statusupdate: o.statusupdate !== undefined ? o.statusupdate : base.statusupdate,
+      updatedAt: o.updatedAt,
+      actor: o.actor
+    });
+  }
+  function isEdited(id) { return !!overrides[id]; }
+
+  function computeStats(items) {
+    var total = items.length, open = 0, closed = 0;
+    items.forEach(function (it) { if (it.status === "Open") open++; else closed++; });
+    return { total: total, open: open, closed: closed, pct: total ? Math.round((closed / total) * 100) : 0 };
+  }
+  function passesFilter(it) {
+    if (filters.status !== "all" && it.status !== filters.status) return false;
+    if (filters.areas.size && !filters.areas.has(it.area)) return false;
+    if (filters.disiplin !== "all" && it.disiplin !== filters.disiplin) return false;
+    if (filters.search) {
+      var hay = (it.no + " " + it.area + " " + it.disiplin + " " + it.defect + " " + it.masalah + " " + it.keterangan + " " + it.feedback + " " + it.statusupdate).toLowerCase();
+      if (hay.indexOf(filters.search) === -1) return false;
+    }
+    return true;
+  }
+
+  function buildAreaChips() {
+    var row = document.getElementById("area-chip-row");
+    var html = '<button type="button" class="chip" data-area="__all__">Semua area</button>';
+    AREA_ORDER.forEach(function (area) {
+      var count = SEED.filter(function (d) { return d.area === area; }).length;
+      html += '<button type="button" class="chip" data-area="' + escapeHtml(area) + '">' + escapeHtml(area) + '<span class="c">' + count + '</span></button>';
+    });
+    row.innerHTML = html;
+    row.addEventListener("click", function (e) {
+      var btn = e.target.closest(".chip");
+      if (!btn) return;
+      var area = btn.getAttribute("data-area");
+      if (area === "__all__") { filters.areas.clear(); }
+      else { if (filters.areas.has(area)) filters.areas.delete(area); else filters.areas.add(area); }
+      syncAreaChips();
+      render();
+    });
+    syncAreaChips();
+  }
+  function syncAreaChips() {
+    document.querySelectorAll("#area-chip-row .chip").forEach(function (btn) {
+      var area = btn.getAttribute("data-area");
+      var active = area === "__all__" ? filters.areas.size === 0 : filters.areas.has(area);
+      btn.classList.toggle("active", active);
+    });
+  }
+  function buildDisiplinSelect() {
+    var sel = document.getElementById("disiplin-select");
+    DISIPLIN_LIST.forEach(function (d) { var opt = document.createElement("option"); opt.value = d; opt.textContent = d; sel.appendChild(opt); });
+    sel.addEventListener("change", function () { filters.disiplin = sel.value; render(); });
+  }
+
+  function itemRowHtml(it) {
+    var edited = isEdited(it.id);
+    var statusClass = it.status === "Open" ? "open" : "closed";
+    var openAttr = openItemIds.has(it.id) ? " open" : "";
+    var editedByLine = "";
+    if (it.updatedAt) {
+      editedByLine = "Diperbarui" + (it.actor ? " oleh " + escapeHtml(it.actor) : "") + " " + fmtTime(it.updatedAt);
+    }
+    return (
+      '<details class="item' + (edited ? " edited" : "") + '" data-id="' + it.id + '"' + openAttr + '>' +
+        '<summary class="item-head">' +
+          '<span class="item-no">' + it.no + '</span>' +
+          '<span class="item-title-wrap">' +
+            '<div class="item-title">' + escapeHtml(it.defect) + '</div>' +
+            '<div class="item-meta"><span class="disiplin">' + escapeHtml(it.disiplin) + '</span> &middot; ' + escapeHtml(it.area) + '</div>' +
+          '</span>' +
+          '<span class="item-target"><span class="lbl">Target</span>' + escapeHtml(it.target || "—") + '</span>' +
+          '<button type="button" class="status-pill ' + statusClass + '" data-action="toggle-status" data-id="' + it.id + '"' + (readOnly ? " disabled" : "") + '>' + it.status + '</button>' +
+        '</summary>' +
+        '<div class="item-body">' +
+          (it.masalah ? '<div class="field"><span class="k">Permasalahan</span><span class="v">' + escapeHtml(it.masalah) + '</span></div>' : "") +
+          (it.keterangan ? '<div class="field"><span class="k">Keterangan</span><span class="v">' + escapeHtml(it.keterangan) + '</span></div>' : "") +
+          (it.feedback ? '<div class="field"><span class="k">Feed Back HK</span><span class="v">' + escapeHtml(it.feedback) + '</span></div>' : "") +
+          '<div class="tag-row">' +
+            '<span class="tag">No. ' + it.no + '</span>' +
+            '<span class="tag">D/O: ' + escapeHtml(it.do || "—") + '</span>' +
+            '<span class="tag">Target: ' + escapeHtml(it.target || "—") + '</span>' +
+          '</div>' +
+          '<div class="field">' +
+            '<span class="k">Status</span>' +
+            '<div class="status-toggle-row">' +
+              '<div class="seg">' +
+                '<button type="button" class="open' + (it.status === "Open" ? " active" : "") + '" data-action="set-status" data-status="Open" data-id="' + it.id + '"' + (readOnly ? " disabled" : "") + '>Open</button>' +
+                '<button type="button" class="closed' + (it.status === "Close" ? " active" : "") + '" data-action="set-status" data-status="Close" data-id="' + it.id + '"' + (readOnly ? " disabled" : "") + '>Close</button>' +
+              '</div>' +
+              (edited && !readOnly ? '<button type="button" class="reset-item-btn" data-action="reset-item" data-id="' + it.id + '">↺ Kembalikan ke data asli</button>' : '') +
+            '</div>' +
+          '</div>' +
+          '<div class="field update-box">' +
+            '<span class="k">Update Status (dapat diedit)</span>' +
+            '<textarea data-action="edit-note" data-id="' + it.id + '" placeholder="Tulis update terbaru di sini…"' + (readOnly ? " disabled" : "") + '>' + escapeHtml(it.statusupdate) + '</textarea>' +
+            '<div class="update-foot">' +
+              '<span class="saved-flag" data-flag-for="' + it.id + '"></span>' +
+              '<span class="edited-at" data-time-for="' + it.id + '">' + editedByLine + '</span>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+      '</details>'
+    );
+  }
+
+  function areaSectionHtml(area, items) {
+    var stats = computeStats(items);
+    var openAttr = openAreaIds.has(area) ? " open" : "";
+    return (
+      '<details class="area-section" data-area="' + escapeHtml(area) + '"' + openAttr + '>' +
+        '<summary class="area-head">' +
+          '<svg class="chev" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3"><polyline points="9 6 15 12 9 18"/></svg>' +
+          '<h2>' + escapeHtml(area) + '</h2>' +
+          '<span class="sub">' + stats.closed + '/' + stats.total + ' selesai</span>' +
+          '<span class="spacer"></span>' +
+          '<span class="area-bar"><span class="bar-track"><span class="bar-fill" style="width:' + stats.pct + '%"></span></span></span>' +
+          '<span class="count-badge">' + stats.total + '</span>' +
+        '</summary>' +
+        '<div class="item-list">' + items.map(itemRowHtml).join("") + '</div>' +
+      '</details>'
+    );
+  }
+
+  function render() {
+    var all = SEED.map(merged);
+    var filtered = all.filter(passesFilter);
+    var overall = computeStats(all);
+    document.getElementById("stat-total").textContent = overall.total;
+    document.getElementById("stat-open").textContent = overall.open;
+    document.getElementById("stat-closed").textContent = overall.closed;
+    document.getElementById("stat-pct").textContent = overall.pct + "%";
+    document.getElementById("stat-bar").style.width = overall.pct + "%";
+
+    var board = document.getElementById("board");
+    var empty = document.getElementById("empty-state");
+    if (!filtered.length) { board.innerHTML = ""; empty.style.display = "block"; return; }
+    empty.style.display = "none";
+
+    var byArea = {};
+    filtered.forEach(function (it) { (byArea[it.area] = byArea[it.area] || []).push(it); });
+    var html = "";
+    AREA_ORDER.forEach(function (area) { if (byArea[area] && byArea[area].length) html += areaSectionHtml(area, byArea[area]); });
+    board.innerHTML = html;
+
+    board.querySelectorAll("details.area-section").forEach(function (d) {
+      d.addEventListener("toggle", function () {
+        var a = d.getAttribute("data-area");
+        if (d.open) openAreaIds.add(a); else openAreaIds.delete(a);
+      });
+    });
+    board.querySelectorAll("details.item").forEach(function (d) {
+      d.addEventListener("toggle", function () {
+        var id = d.getAttribute("data-id");
+        if (d.open) openItemIds.add(id); else openItemIds.delete(id);
+      });
+    });
+  }
+
+  function showToast(msg) {
+    var t = document.getElementById("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    clearTimeout(showToast._t);
+    showToast._t = setTimeout(function () { t.classList.remove("show"); }, 2600);
+  }
+
+  function setSyncStatus(state, text) {
+    var el = document.getElementById("sync-status");
+    el.className = "sync-status " + state;
+    document.getElementById("sync-status-text").textContent = text;
+  }
+
+  function showSetupBanner(msg) {
+    var b = document.getElementById("setup-banner");
+    if (!msg) { b.classList.remove("show"); b.innerHTML = ""; return; }
+    b.innerHTML = msg;
+    b.classList.add("show");
+  }
+
+  function fetchState(isPoll) {
+    if (!isPoll) setSyncStatus("pending", "Menyambungkan…");
+    return fetch(API, { method: "GET", cache: "no-store" })
+      .then(function (r) { return r.json().then(function (j) { return { ok: r.ok, status: r.status, body: j }; }); })
+      .then(function (res) {
+        if (res.status === 503) {
+          readOnly = true;
+          setSyncStatus("err", "Mode baca-saja");
+          showSetupBanner(
+            "<b>Sinkronisasi belum aktif.</b> " + escapeHtml(res.body.message || "") +
+            " Tambahkan variabel lingkungan <code>GITHUB_TOKEN</code> (fine-grained PAT dengan akses Contents: Read and write ke repo ini) di Vercel &rarr; Project Settings &rarr; Environment Variables, lalu deploy ulang. Sampai saat itu, papan ini bisa dilihat tapi status belum bisa disimpan bersama."
+          );
+          render();
+          return;
+        }
+        if (!res.ok) throw new Error("http_" + res.status);
+        readOnly = false;
+        showSetupBanner(null);
+        overrides = res.body.overrides || {};
+        setSyncStatus("ok", "Tersinkron");
+        render();
+      })
+      .catch(function (err) {
+        setSyncStatus("err", "Gagal sinkron");
+        if (!isPoll) showToast("Tidak bisa terhubung ke server. Menampilkan data yang tersimpan sebelumnya.");
+      });
+  }
+
+  function postChange(id, patch) {
+    return fetch(API, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(Object.assign({ id: id, actor: actorName() }, patch))
+    }).then(function (r) {
+      return r.json().then(function (j) { return { ok: r.ok, status: r.status, body: j }; });
+    });
+  }
+
+  function toggleStatusInPlace(id, newStatus) {
+    if (readOnly) return;
+    var base = SEED.find(function (d) { return d.id === id; });
+    if (!base) return;
+    var prevOverride = overrides[id] ? Object.assign({}, overrides[id]) : undefined;
+    overrides[id] = Object.assign({}, overrides[id], { status: newStatus, updatedAt: new Date().toISOString(), actor: actorName() || (overrides[id] && overrides[id].actor) });
+    render();
+    setSyncStatus("pending", "Menyimpan…");
+    postChange(id, { status: newStatus }).then(function (res) {
+      if (!res.ok) throw new Error(res.body && res.body.message || "gagal");
+      overrides = res.body.overrides || overrides;
+      setSyncStatus("ok", "Tersinkron");
+      render();
+    }).catch(function () {
+      if (prevOverride) overrides[id] = prevOverride; else delete overrides[id];
+      setSyncStatus("err", "Gagal menyimpan");
+      showToast("Gagal menyimpan status. Coba lagi.");
+      render();
+    });
+  }
+
+  var saveNote = debounce(function (id, value) {
+    if (readOnly) return;
+    var flag = document.querySelector('[data-flag-for="' + id + '"]');
+    if (flag) { flag.className = "saved-flag pending"; flag.textContent = "Menyimpan…"; }
+    postChange(id, { statusupdate: value }).then(function (res) {
+      if (!res.ok) throw new Error("gagal");
+      overrides = res.body.overrides || overrides;
+      var f2 = document.querySelector('[data-flag-for="' + id + '"]');
+      if (f2) { f2.className = "saved-flag ok"; f2.textContent = "✓ Tersimpan"; }
+      var timeEl = document.querySelector('[data-time-for="' + id + '"]');
+      if (timeEl && overrides[id]) timeEl.textContent = "Diperbarui" + (overrides[id].actor ? " oleh " + overrides[id].actor : "") + " " + fmtTime(overrides[id].updatedAt);
+      var itemDetails = document.querySelector('details.item[data-id="' + id + '"]');
+      if (itemDetails) itemDetails.classList.add("edited");
+    }).catch(function () {
+      var f3 = document.querySelector('[data-flag-for="' + id + '"]');
+      if (f3) { f3.className = "saved-flag err"; f3.textContent = "Gagal menyimpan"; }
+    });
+  }, 600);
+
+  document.getElementById("board").addEventListener("click", function (e) {
+    var toggleBtn = e.target.closest('[data-action="toggle-status"]');
+    if (toggleBtn) {
+      e.preventDefault(); e.stopPropagation();
+      if (toggleBtn.disabled) return;
+      var id = toggleBtn.getAttribute("data-id");
+      var base = merged(SEED.find(function (d) { return d.id === id; }));
+      toggleStatusInPlace(id, base.status === "Open" ? "Close" : "Open");
+      return;
+    }
+    var setBtn = e.target.closest('[data-action="set-status"]');
+    if (setBtn) {
+      e.preventDefault(); e.stopPropagation();
+      if (setBtn.disabled) return;
+      toggleStatusInPlace(setBtn.getAttribute("data-id"), setBtn.getAttribute("data-status"));
+      return;
+    }
+    var resetBtn = e.target.closest('[data-action="reset-item"]');
+    if (resetBtn) {
+      e.preventDefault(); e.stopPropagation();
+      var rid = resetBtn.getAttribute("data-id");
+      fetch(API, { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ id: rid }) })
+        .then(function (r) { return r.json(); })
+        .then(function (j) { overrides = j.overrides || {}; render(); showToast("Item dikembalikan ke data asli."); })
+        .catch(function () { showToast("Gagal mereset item."); });
+      return;
+    }
+  });
+
+  document.getElementById("board").addEventListener("input", function (e) {
+    var el = e.target.closest('[data-action="edit-note"]');
+    if (!el || readOnly) return;
+    saveNote(el.getAttribute("data-id"), el.value);
+  });
+
+  document.getElementById("search-input").addEventListener("input", debounce(function (e) {
+    filters.search = this.value.trim().toLowerCase();
+    render();
+  }, 180));
+
+  document.getElementById("status-seg").addEventListener("click", function (e) {
+    var btn = e.target.closest("button");
+    if (!btn) return;
+    document.querySelectorAll("#status-seg button").forEach(function (b) { b.classList.remove("active"); });
+    btn.classList.add("active");
+    filters.status = btn.getAttribute("data-status");
+    render();
+  });
+
+  var exportMenu = document.getElementById("export-menu");
+  document.getElementById("export-toggle").addEventListener("click", function (e) { e.stopPropagation(); exportMenu.classList.toggle("show"); });
+  document.addEventListener("click", function () { exportMenu.classList.remove("show"); });
+
+  function todayStamp() {
+    var d = new Date();
+    return d.getFullYear() + "-" + String(d.getMonth() + 1).padStart(2, "0") + "-" + String(d.getDate()).padStart(2, "0");
+  }
+  function offerDownload(filename, text) {
+    if (window.claude && window.claude.downloads) {
+      window.claude.downloads.save({ filename: filename, data: text }).then(function () {
+        showToast("File “" + filename + "” diunduh.");
+      }).catch(function (err) {
+        if (err && err.code === "declined") return;
+        fallbackCopy(text, filename);
+      });
+    } else {
+      fallbackCopy(text, filename);
+    }
+  }
+  function fallbackCopy(text, filename) {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () { showToast("Unduh tidak tersedia — isi “" + filename + "” disalin ke clipboard."); })
+        .catch(function () { showToast("Tidak bisa mengunduh atau menyalin di tampilan ini."); });
+    } else { showToast("Tidak bisa mengunduh di tampilan ini."); }
+  }
+
+  document.getElementById("export-txt").addEventListener("click", function () {
+    exportMenu.classList.remove("show");
+    var all = SEED.map(merged);
+    var overall = computeStats(all);
+    var lines = [];
+    lines.push("RINGKASAN STATUS — OUTSTANDING WORKS TALAVERA PROJECT");
+    lines.push("Data dasar: 27 Juli 2026  |  Diekspor: " + new Date().toLocaleString("id-ID"));
+    lines.push("Total " + overall.total + " item — Open " + overall.open + " / Close " + overall.closed + " (" + overall.pct + "% selesai)");
+    lines.push("");
+    AREA_ORDER.forEach(function (area) {
+      var items = all.filter(function (d) { return d.area === area; });
+      if (!items.length) return;
+      var st = computeStats(items);
+      lines.push("== " + area + " (" + st.closed + "/" + st.total + " selesai) ==");
+      items.forEach(function (it) {
+        lines.push("  [" + it.status.toUpperCase() + "] No." + it.no + " (" + it.disiplin + ") " + it.defect);
+        if (it.statusupdate) lines.push("      Update: " + it.statusupdate.replace(/\n/g, " / "));
+        if (it.target) lines.push("      Target: " + it.target);
+      });
+      lines.push("");
+    });
+    offerDownload("talavera-status-ringkasan-" + todayStamp() + ".txt", lines.join("\n"));
+  });
+
+  document.getElementById("refresh-now").addEventListener("click", function () { exportMenu.classList.remove("show"); fetchState(false); });
+
+  document.getElementById("reset-all-btn").addEventListener("click", function () {
+    exportMenu.classList.remove("show");
+    if (readOnly) { showToast("Papan dalam mode baca-saja."); return; }
+    if (!confirm("Kembalikan semua status & update ke data asli dari file Excel? Perubahan akan dihapus untuk semua orang.")) return;
+    fetch(API, { method: "DELETE", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ all: true }) })
+      .then(function (r) { return r.json(); })
+      .then(function (j) { overrides = j.overrides || {}; render(); showToast("Semua perubahan telah direset untuk semua orang."); })
+      .catch(function () { showToast("Gagal mereset."); });
+  });
+
+  document.addEventListener("visibilitychange", function () { if (document.visibilityState === "visible") fetchState(true); });
+
+  buildAreaChips();
+  buildDisiplinSelect();
+  render();
+  fetchState(false).then(function () {
+    pollTimer = setInterval(function () { fetchState(true); }, 15000);
+  });
+})();
+</script>
+</body>
+</html>
