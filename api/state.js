@@ -94,6 +94,7 @@ module.exports = async function handler(req, res) {
       const id = body.id;
       const status = body.status;
       const statusupdate = body.statusupdate;
+      const pic = body.pic;
       const actor = body.actor;
       if (!id || typeof id !== "string") {
         res.status(400).json({ error: "bad_request", message: "id wajib diisi." });
@@ -107,12 +108,17 @@ module.exports = async function handler(req, res) {
         res.status(400).json({ error: "bad_request", message: "statusupdate harus berupa teks." });
         return;
       }
+      if (pic !== undefined && typeof pic !== "string") {
+        res.status(400).json({ error: "bad_request", message: "pic harus berupa teks." });
+        return;
+      }
 
       const result = await withRetry(async function () {
         const { overrides, sha } = await readState(token);
         const patch = Object.assign({}, overrides[id]);
         if (status !== undefined) patch.status = status;
         if (statusupdate !== undefined) patch.statusupdate = statusupdate;
+        if (pic !== undefined) patch.pic = pic.slice(0, 60);
         patch.updatedAt = new Date().toISOString();
         if (actor && typeof actor === "string") patch.actor = actor.slice(0, 60);
         overrides[id] = patch;

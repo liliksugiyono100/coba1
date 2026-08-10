@@ -183,6 +183,9 @@
   .status-toggle-row .seg button.closed.active { background: var(--closed); color: #0c1f13; }
   .update-box textarea { width: 100%; min-height: 56px; resize: vertical; padding: 8px 10px; border-radius: var(--radius-sm); border: 1px solid var(--border-strong); background: var(--panel-2); color: var(--ink); }
   .update-box textarea:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .pic-input { width: 100%; max-width: 320px; padding: 7px 10px; border-radius: var(--radius-sm); border: 1px solid var(--border-strong); background: var(--panel-2); color: var(--ink); }
+  .pic-input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+  .pic-name { font-weight: 600; color: var(--ink-soft); }
   .update-foot { display: flex; justify-content: space-between; align-items: center; gap: 8px; margin-top: 4px; flex-wrap: wrap; }
   .saved-flag { font-size: 11px; display: flex; align-items: center; gap: 4px; }
   .saved-flag.ok { color: var(--good); }
@@ -241,6 +244,7 @@
       <input type="text" id="search-input" placeholder="Cari defect, keterangan, area, kode equipment…" autocomplete="off">
     </div>
     <select class="filter-select" id="disiplin-select"><option value="all">Semua disiplin</option></select>
+    <select class="filter-select" id="pic-select"><option value="all">Semua PIC</option></select>
     <div class="seg" id="status-seg">
       <button data-status="all" class="active">Semua</button>
       <button data-status="Open">Open</button>
@@ -284,7 +288,7 @@
   DISIPLIN_LIST.sort();
 
   var overrides = {};
-  var filters = { search: "", areas: new Set(), disiplin: "all", status: "all" };
+  var filters = { search: "", areas: new Set(), disiplin: "all", status: "all", pic: "all" };
   var openAreaIds = new Set(AREA_ORDER);
   var openItemIds = new Set();
   var saveTimers = {};
@@ -327,6 +331,7 @@
     return Object.assign({}, base, {
       status: o.status !== undefined ? o.status : base.status,
       statusupdate: o.statusupdate !== undefined ? o.statusupdate : base.statusupdate,
+      pic: o.pic !== undefined ? o.pic : "",
       updatedAt: o.updatedAt,
       actor: o.actor
     });
@@ -342,8 +347,10 @@
     if (filters.status !== "all" && it.status !== filters.status) return false;
     if (filters.areas.size && !filters.areas.has(it.area)) return false;
     if (filters.disiplin !== "all" && it.disiplin !== filters.disiplin) return false;
+    if (filters.pic === "__none__") { if (it.pic) return false; }
+    else if (filters.pic !== "all" && it.pic !== filters.pic) return false;
     if (filters.search) {
-      var hay = (it.no + " " + it.area + " " + it.disiplin + " " + it.defect + " " + it.masalah + " " + it.keterangan + " " + it.feedback + " " + it.statusupdate).toLowerCase();
+      var hay = (it.no + " " + it.area + " " + it.disiplin + " " + it.defect + " " + it.masalah + " " + it.keterangan + " " + it.feedback + " " + it.statusupdate + " " + (it.pic || "")).toLowerCase();
       if (hay.indexOf(filters.search) === -1) return false;
     }
     return true;
@@ -380,6 +387,19 @@
     DISIPLIN_LIST.forEach(function (d) { var opt = document.createElement("option"); opt.value = d; opt.textContent = d; sel.appendChild(opt); });
     sel.addEventListener("change", function () { filters.disiplin = sel.value; render(); });
   }
+  function refreshPicSelect(all) {
+    var sel = document.getElementById("pic-select");
+    var pics = [];
+    all.forEach(function (it) { if (it.pic && pics.indexOf(it.pic) === -1) pics.push(it.pic); });
+    pics.sort(function (a, b) { return a.localeCompare(b); });
+    var html = '<option value="all">Semua PIC</option><option value="__none__">Belum ada PIC</option>';
+    pics.forEach(function (p) { html += '<option value="' + escapeHtml(p) + '">' + escapeHtml(p) + '</option>'; });
+    if (sel.innerHTML !== html) {
+      sel.innerHTML = html;
+      sel.value = (filters.pic === "all" || filters.pic === "__none__" || pics.indexOf(filters.pic) !== -1) ? filters.pic : "all";
+      filters.pic = sel.value;
+    }
+  }
 
   function itemRowHtml(it) {
     var edited = isEdited(it.id);
@@ -395,7 +415,7 @@
           '<span class="item-no">' + it.no + '</span>' +
           '<span class="item-title-wrap">' +
             '<div class="item-title">' + escapeHtml(it.defect) + '</div>' +
-            '<div class="item-meta"><span class="disiplin">' + escapeHtml(it.disiplin) + '</span> &middot; ' + escapeHtml(it.area) + '</div>' +
+            '<div class="item-meta"><span class="disiplin">' + escapeHtml(it.disiplin) + '</span> &middot; ' + escapeHtml(it.area) + (it.pic ? ' &middot; PIC: <span class="pic-name">' + escapeHtml(it.pic) + '</span>' : '') + '</div>' +
           '</span>' +
           '<span class="item-target"><span class="lbl">Target</span>' + escapeHtml(it.target || "—") + '</span>' +
           '<button type="button" class="status-pill ' + statusClass + '" data-action="toggle-status" data-id="' + it.id + '"' + (readOnly ? " disabled" : "") + '>' + it.status + '</button>' +
@@ -408,6 +428,13 @@
             '<span class="tag">No. ' + it.no + '</span>' +
             '<span class="tag">D/O: ' + escapeHtml(it.do || "—") + '</span>' +
             '<span class="tag">Target: ' + escapeHtml(it.target || "—") + '</span>' +
+          '</div>' +
+          '<div class="field update-box">' +
+            '<span class="k">PIC (Person In Charge)</span>' +
+            '<input type="text" class="pic-input" data-action="edit-pic" data-id="' + it.id + '" placeholder="Nama penanggung jawab…" maxlength="60" value="' + escapeHtml(it.pic) + '"' + (readOnly ? " disabled" : "") + '>' +
+            '<div class="update-foot">' +
+              '<span class="saved-flag" data-flag-for="pic-' + it.id + '"></span>' +
+            '</div>' +
           '</div>' +
           '<div class="field">' +
             '<span class="k">Status</span>' +
@@ -452,6 +479,7 @@
 
   function render() {
     var all = SEED.map(merged);
+    refreshPicSelect(all);
     var filtered = all.filter(passesFilter);
     var overall = computeStats(all);
     document.getElementById("stat-total").textContent = overall.total;
@@ -613,10 +641,34 @@
     }
   });
 
+  var savePic = debounce(function (key, id, value) {
+    if (readOnly) return;
+    var flag = document.querySelector('[data-flag-for="pic-' + id + '"]');
+    if (flag) { flag.className = "saved-flag pending"; flag.textContent = "Menyimpan…"; }
+    postChange(id, { pic: value }).then(function (res) {
+      if (!res.ok) throw new Error("gagal");
+      overrides = res.body.overrides || overrides;
+      var f2 = document.querySelector('[data-flag-for="pic-' + id + '"]');
+      if (f2) { f2.className = "saved-flag ok"; f2.textContent = "✓ Tersimpan"; }
+      var itemDetails = document.querySelector('details.item[data-id="' + id + '"]');
+      if (itemDetails) itemDetails.classList.add("edited");
+      var metaEl = itemDetails && itemDetails.querySelector(".item-meta");
+      var baseItem = SEED.find(function (d) { return d.id === id; });
+      if (metaEl && baseItem) {
+        metaEl.innerHTML = '<span class="disiplin">' + escapeHtml(baseItem.disiplin) + '</span> &middot; ' + escapeHtml(baseItem.area) + (value ? ' &middot; PIC: <span class="pic-name">' + escapeHtml(value) + '</span>' : '');
+      }
+      refreshPicSelect(SEED.map(merged));
+    }).catch(function () {
+      var f3 = document.querySelector('[data-flag-for="pic-' + id + '"]');
+      if (f3) { f3.className = "saved-flag err"; f3.textContent = "Gagal menyimpan"; }
+    });
+  }, 600);
+
   document.getElementById("board").addEventListener("input", function (e) {
-    var el = e.target.closest('[data-action="edit-note"]');
-    if (!el || readOnly) return;
-    saveNote(el.getAttribute("data-id"), el.value);
+    var noteEl = e.target.closest('[data-action="edit-note"]');
+    if (noteEl && !readOnly) { saveNote(noteEl.getAttribute("data-id"), noteEl.value); return; }
+    var picEl = e.target.closest('[data-action="edit-pic"]');
+    if (picEl && !readOnly) { var pid = picEl.getAttribute("data-id"); savePic("pic-" + pid, pid, picEl.value); return; }
   });
 
   document.getElementById("search-input").addEventListener("input", debounce(function (e) {
@@ -676,6 +728,7 @@
       lines.push("== " + area + " (" + st.closed + "/" + st.total + " selesai) ==");
       items.forEach(function (it) {
         lines.push("  [" + it.status.toUpperCase() + "] No." + it.no + " (" + it.disiplin + ") " + it.defect);
+        if (it.pic) lines.push("      PIC: " + it.pic);
         if (it.statusupdate) lines.push("      Update: " + it.statusupdate.replace(/\n/g, " / "));
         if (it.target) lines.push("      Target: " + it.target);
       });
@@ -697,6 +750,8 @@
   });
 
   document.addEventListener("visibilitychange", function () { if (document.visibilityState === "visible") fetchState(true); });
+
+  document.getElementById("pic-select").addEventListener("change", function (e) { filters.pic = e.target.value; render(); });
 
   buildAreaChips();
   buildDisiplinSelect();
